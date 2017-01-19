@@ -101,7 +101,16 @@ public class CSampler {
      */
     public void Sample() {
         mSamplesRead = ar.read(buffer, 0, buffersizebytes);
-        Log.e("BUFF"+buffer.length, bufferPrint(buffer));
+        short[] nbuff = new short[buffer.length];
+        // TODO: 19/01/17 Play around with the 'a' value
+        double a = 0.5;
+        nbuff[0] = buffer[0];
+        for(int i = 1; i < buffer.length; i++){
+            nbuff[i] = (short) (a * nbuff[i-1] + a * (buffer[i] - buffer[i-1]));
+        }
+        buffer = nbuff;
+        if(nbuff.length != 0)
+            Log.e("BUFF"+buffer.length, bufferPrint(nbuff));
     }
 
     private String bufferPrint(short[] buffer){
