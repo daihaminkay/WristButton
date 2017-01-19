@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">SensorTest</string>
+    <string name="hello_world">Hello World!</string>
+    <string name="title_activity_train">TrainActivity</string>
+    <string name="title_activity_train_log">TrainLogActivity</string>
+    <string name="title_activity_test">TestActivity</string>
+    <string name="title_activity_train_raw_log">TrainRawLogActivity</string>
+    <string name="title_activity_knock">KnockActivity</string>
+    <string name="title_activity_knock_learn">KnockLearnActivity</string>
+    <string name="title_activity_view_raw">ViewRawActivity</string>
+    <string name="title_activity_mic">MicActivity</string>
+</resources>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.sensor.magic.sensortest">
+
+    <uses-feature android:name="android.hardware.type.watch" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@android:style/Theme.DeviceDefault">
+        <uses-library
+            android:name="com.google.android.wearable"
+            android:required="false" />
+
+        <activity
+            android:name=".SensorActivity"
+            android:label="@string/app_name"
+            android:theme="@android:style/Theme.DeviceDefault.Light">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".TrainActivity"
+            android:label="@string/title_activity_train"
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
+        <activity
+            android:name=".TrainLogActivity"
+            android:label="@string/title_activity_train_log"
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
+        <activity
+            android:name=".TestActivity"
+            android:label="@string/title_activity_test"
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
+        <activity
+            android:name=".TrainRawLogActivity"
+            android:label="@string/title_activity_train_raw_log"
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
+        <activity
+            android:name=".KnockActivity"
+            android:label="@string/title_activity_knock"
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
+        <activity
+            android:name=".KnockLearnActivity"
+            android:label="@string/title_activity_knock_learn"
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
+        <activity
+            android:name=".ViewRawActivity"
+            android:label="@string/title_activity_view_raw"
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
+        <activity
+            android:name=".MicActivity"
+            android:label="@string/title_activity_mic"
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
+    </application>
+
+</manifest>

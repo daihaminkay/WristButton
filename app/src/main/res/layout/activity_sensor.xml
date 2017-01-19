@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="com.sensor.magic.sensortest.TrainActivity"
+    tools:deviceIds="wear"
+    >
+
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_weight="4">
+    <!--Button
+        android:id="@+id/start"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start training"
+        android:onClick="startTraining"
+        android:layout_weight="1"/-->
+
+    <Button
+        android:id="@+id/view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View train data"
+        android:onClick="viewTraining"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/view_raw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View RAW train data"
+        android:onClick="viewRawTraining"
+        android:layout_weight="1"/>
+
+    <!--Button
+        android:id="@+id/test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start testing"
+        android:onClick="startTesting"
+        android:layout_weight="1"/-->
+
+    <Button
+        android:id="@+id/knock_training"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Knock Training"
+        android:onClick="startKnockTraining"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/knock_game"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Start Knock Game"
+        android:onClick="startKnockGame"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/data_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="View Raw Updates"
+        android:onClick="viewAllUpdates"
+        android:layout_weight="1"/>
+
+    <Button
+        android:id="@+id/audio_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Audio Test"
+        android:onClick="startAudio"
+        android:layout_weight="1"/>
+</LinearLayout>
+
+
+</ScrollView>

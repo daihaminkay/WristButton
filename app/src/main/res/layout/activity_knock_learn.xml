@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.wearable.view.BoxInsetLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/knock_learn_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.sensor.magic.sensortest.KnockLearnActivity"
+    tools:deviceIds="wear">
+
+    <TextView
+        android:id="@+id/knock_learn_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="20pt"
+        android:text="@string/hello_world"
+        app:layout_box="all" />
+
+    <Button
+        android:id="@+id/knock_done"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="END"
+        android:onClick="endTraining"
+        android:layout_gravity="top|right"/>
+
+    <Button
+        android:id="@+id/knock_no"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="NO"
+        android:onClick="saidNo"
+        android:layout_gravity="bottom|right"/>
+
+    <Button
+        android:id="@+id/knock_yes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="YES"
+        android:onClick="saidYes"
+        android:layout_gravity="bottom|left"/>
+
+</android.support.wearable.view.BoxInsetLayout>
