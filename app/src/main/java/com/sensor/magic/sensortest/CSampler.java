@@ -99,33 +99,50 @@ public class CSampler {
     /**
      * Reads the data-bufferts
      */
+    private int bound = 5;
+    private int block = 0;
     public void Sample() {
         mSamplesRead = ar.read(buffer, 0, buffersizebytes);
         short[] nbuff = new short[buffer.length];
         // TODO: 19/01/17 Play around with the 'a' value
-        double a = 0.5;
+        double RC = 1.0/(5000*2*3.14);
+        double dt = 1.0/16000;
+        double a = RC/(RC + dt);
         nbuff[0] = buffer[0];
         for(int i = 1; i < buffer.length; i++){
             nbuff[i] = (short) (a * nbuff[i-1] + a * (buffer[i] - buffer[i-1]));
         }
         buffer = nbuff;
         if(nbuff.length != 0)
-            Log.e("BUFF"+buffer.length, bufferPrint(nbuff));
+            Log.d("BUFF"+a, bufferPrint(nbuff));
     }
 
     private String bufferPrint(short[] buffer){
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         short prev = buffer[0];
+        int count = 0;
         for(short s : buffer){
-            if(Math.abs(s-prev) > 100) {
-                sb.append(prev);
-                sb.append("~");
-                sb.append(s);
-                sb.append(" ");
+            int abs = Math.abs(s-prev);
+            if( Math.abs(s) >= 20 && Math.abs(s) <= 50 && abs < 100 && abs > 40 ) {
+//                sb.append(prev);
+//                sb.append("~");
+//                sb.append(s);
+//                sb.append(" ");
+                count++;
             }
-            prev = s;
+//            prev = s;
         }
+        double density = (count * 100.0) / buffer.length;
+            sb.append(density);
+        if(density > 1){
+            block++;
+            if(block == bound){
+                Log.e("LOL", "SCRATCH");
+                block = 0;
+            }
+        }
+
         sb.append("]");
         return sb.toString();
     }

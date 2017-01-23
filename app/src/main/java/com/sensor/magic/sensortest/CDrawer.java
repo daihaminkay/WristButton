@@ -7,11 +7,9 @@ import android.graphics.Paint;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
@@ -185,7 +183,7 @@ public class CDrawer extends SurfaceView
         private Boolean m_bDead2 = Boolean.valueOf(true);
         private Boolean m_bRun = Boolean.valueOf(true);
         private Boolean m_bSleep = Boolean.valueOf(false);
-        private int m_iScaler = 20;
+        private int m_iScaler = 8;
         private int counter = 0;
 
         public int getScale(){
@@ -297,7 +295,7 @@ public class CDrawer extends SurfaceView
                 paramCanvas.drawLine(StratX, StartY, StratX + 1, StopY, mLinePaint);
                 if(Math.abs(StartBaseY-StopBaseY) > 15) {
                     //Log.d("FREQ", ": " + (StartY - StopY));
-                    sb.append((StartBaseY-StopBaseY) + " ");
+                    sb.append((StartY-StopY) + " ");
                 }
                 cu1++;
                 mBuffIndex++;

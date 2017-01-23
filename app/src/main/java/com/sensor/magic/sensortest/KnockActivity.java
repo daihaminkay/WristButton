@@ -188,7 +188,7 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
                 } else if (!recognised && absZ > 5) {
                     log.add(String.valueOf(absZ));
                     mRawView.setText(queueToString(log));
-                    mTextView.setText("SHAKE\n" + pendingRotation.toString());
+                    mTextView.setText("SHAKE\n" + absZ);
                     //                try {
                     //                    mRawView.setText(String.valueOf(classifier.classifyInstance(di)));
                     //                } catch (Exception e) {
