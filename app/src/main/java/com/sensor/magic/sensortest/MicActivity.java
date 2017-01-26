@@ -10,6 +10,8 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -18,8 +20,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MicActivity extends Activity implements SensorEventListener {
-    private CDrawer.CDrawThread mDrawThread;
-    private CDrawer mdrawer;
+//    private CDrawer.CDrawThread mDrawThread;
+//    private CDrawer mdrawer;
 
     private ArrayList<AccelData> sensorData = new ArrayList<>();
     private boolean recognised;
@@ -27,6 +29,7 @@ public class MicActivity extends Activity implements SensorEventListener {
     private Boolean m_bStart = Boolean.valueOf(false);
     private Boolean recording;
     private CSampler sampler;
+    private LinearLayout layout;
     private FileWriter fw;
 
     private SensorManager mSensorManager;
@@ -36,7 +39,8 @@ public class MicActivity extends Activity implements SensorEventListener {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mic);
-        mdrawer = (CDrawer) findViewById(R.id.drawer);
+        //mdrawer = (CDrawer) findViewById(R.id.drawer);
+        layout = (LinearLayout) findViewById(R.id.mic_layout);
         m_bStart = Boolean.valueOf(false);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
@@ -51,7 +55,7 @@ public class MicActivity extends Activity implements SensorEventListener {
         }
         try {
             fw = new FileWriter(f);
-            mdrawer.setFileWriter(fw);
+            //mdrawer.setFileWriter(fw);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -72,9 +76,9 @@ public class MicActivity extends Activity implements SensorEventListener {
     protected void onPause() {
         System.out.println("onpause");
         sampler.SetRun(Boolean.valueOf(false));
-        mDrawThread.setRun(Boolean.valueOf(false));
+        //mDrawThread.setRun(Boolean.valueOf(false));
         sampler.SetSleeping(Boolean.valueOf(true));
-        mDrawThread.SetSleeping(Boolean.valueOf(true));
+        //mDrawThread.SetSleeping(Boolean.valueOf(true));
         Boolean.valueOf(false);
         super.onPause();
         mSensorManager.unregisterListener(this);
@@ -99,13 +103,13 @@ public class MicActivity extends Activity implements SensorEventListener {
         System.out.println("onresume");
         int i = 0;
         while (true) {
-            if ((sampler.GetDead2().booleanValue()) && (mdrawer.GetDead2().booleanValue())) {
-                System.out.println(sampler.GetDead2() + ", " + mdrawer.GetDead2());
+            if ((sampler.GetDead2().booleanValue())) {
+                //System.out.println(sampler.GetDead2() + ", " + mdrawer.GetDead2());
                 sampler.Restart();
-                if (!m_bStart.booleanValue())
-                    mdrawer.Restart(Boolean.valueOf(true));
+//                if (!m_bStart.booleanValue())
+//                    mdrawer.Restart(Boolean.valueOf(true));
                 sampler.SetSleeping(Boolean.valueOf(false));
-                mDrawThread.SetSleeping(Boolean.valueOf(false));
+                //mDrawThread.SetSleeping(Boolean.valueOf(false));
                 m_bStart = Boolean.valueOf(false);
                 super.onResume();
                 return;
@@ -116,13 +120,13 @@ public class MicActivity extends Activity implements SensorEventListener {
                 i++;
                 if (!sampler.GetDead2().booleanValue())
                     System.out.println("sampler not DEAD!!!");
-                if (!mdrawer.GetDead2().booleanValue()) {
-                    System.out.println("mDrawer not DeAD!!");
-                    mdrawer.SetRun(Boolean.valueOf(false));
-                }
+//                if (!mdrawer.GetDead2().booleanValue()) {
+//                    System.out.println("mDrawer not DeAD!!");
+//                    mdrawer.SetRun(Boolean.valueOf(false));
+//                }
                 if (i <= 4)
                     continue;
-                mDrawThread.SetDead2(Boolean.valueOf(true));
+                //mDrawThread.SetDead2(Boolean.valueOf(true));
             } catch (InterruptedException localInterruptedException) {
                 localInterruptedException.printStackTrace();
             }
@@ -152,8 +156,8 @@ public class MicActivity extends Activity implements SensorEventListener {
      * Recives the buffert from the sampler
      */
     public void setBuffer(short[] paramArrayOfShort) {
-        mDrawThread = mdrawer.getThread();
-        mDrawThread.setBuffer(paramArrayOfShort);
+//        mDrawThread = mdrawer.getThread();
+//        mDrawThread.setBuffer(paramArrayOfShort);
     }
 
     /**
@@ -161,9 +165,9 @@ public class MicActivity extends Activity implements SensorEventListener {
      */
     public void run() {
         try {
-            if (mDrawThread == null) {
-                mDrawThread = mdrawer.getThread();
-            }
+//            if (mDrawThread == null) {
+//                mDrawThread = mdrawer.getThread();
+//            }
             if (sampler == null)
                 sampler = new CSampler(this);
             Context localContext = getApplicationContext();
@@ -180,21 +184,14 @@ public class MicActivity extends Activity implements SensorEventListener {
                         sampler.StartRecording();
                 }
             };
-            mdrawer.setOnClickListener(listener);
+            //mdrawer.setOnClickListener(listener);
             if (sampler != null) {
                 sampler.Init();
                 sampler.StartRecording();
                 sampler.StartSampling();
             }
 
-            mdrawer.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View v) {
-                    mDrawThread.ChangeSensitivity();
-                    Log.d("MIC:", String.valueOf(mDrawThread.getScale()));
-                    return true;
-                }
-            });
+
         } catch (NullPointerException e) {
             Log.e("Main_Run", "NullPointer: " + e.getMessage());
         } catch (Exception e) {
@@ -219,11 +216,23 @@ public class MicActivity extends Activity implements SensorEventListener {
             if (!recognised && absZ > 25) {
                 sampler.StopRecording();
                 recognised = true;
-            } else if (!recognised && absZ > 5) {
-
             } else if (recognised && absX < 1 && absY < 1 && absZ < 1) {
                 recognised = false;
+            }
 
+            if (sensorData.size() > 10) {
+                boolean negAcc = true;
+                for(int i = sensorData.size()-1; i > sensorData.size() - 11; i--){
+                    if(sensorData.get(i).getX() > -2){
+                        negAcc = false;
+                    }
+                }
+                if(negAcc){
+                    Log.e("MIC", "GOT HERE");
+                    TextView lol = new TextView(this.getApplicationContext());
+                    lol.setText("DOWN SCRATCH");
+                    layout.addView(lol);
+                }
             }
         }
     }

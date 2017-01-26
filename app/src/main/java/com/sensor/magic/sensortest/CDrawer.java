@@ -57,6 +57,10 @@ public class CDrawer extends SurfaceView
         fwInitialised = true;
     }
 
+    public void killThread(){
+        mDrawThread.setRun(false);
+    }
+
     public Boolean GetDead2() {
         return mDrawThread.GetDead2();
     }

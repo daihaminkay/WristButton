@@ -99,13 +99,13 @@ public class CSampler {
     /**
      * Reads the data-bufferts
      */
-    private int bound = 5;
+    private final int bound = 5;
     private int block = 0;
     public void Sample() {
         mSamplesRead = ar.read(buffer, 0, buffersizebytes);
         short[] nbuff = new short[buffer.length];
         // TODO: 19/01/17 Play around with the 'a' value
-        double RC = 1.0/(5000*2*3.14);
+        double RC = 1.0/(10000*2*3.14);
         double dt = 1.0/16000;
         double a = RC/(RC + dt);
         nbuff[0] = buffer[0];
@@ -124,7 +124,7 @@ public class CSampler {
         int count = 0;
         for(short s : buffer){
             int abs = Math.abs(s-prev);
-            if( Math.abs(s) >= 20 && Math.abs(s) <= 50 && abs < 100 && abs > 40 ) {
+            if( Math.abs(s) >= 10 && Math.abs(s) <= 30 && abs < 60 && abs > 20 ) {
 //                sb.append(prev);
 //                sb.append("~");
 //                sb.append(s);
@@ -137,10 +137,13 @@ public class CSampler {
             sb.append(density);
         if(density > 1){
             block++;
+            // TODO: 23/01/2017 Reset if saw 0 valued && fuse with the accelerometer to eliminate random noise
             if(block == bound){
                 Log.e("LOL", "SCRATCH");
                 block = 0;
             }
+        } else if(density == 0.0){
+            block = 0;
         }
 
         sb.append("]");
