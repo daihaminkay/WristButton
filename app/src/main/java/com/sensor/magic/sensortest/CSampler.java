@@ -99,7 +99,7 @@ public class CSampler {
     /**
      * Reads the data-bufferts
      */
-    private final int bound = 5;
+    private final int bound = 8;
     private int block = 0;
     public void Sample() {
         mSamplesRead = ar.read(buffer, 0, buffersizebytes);
@@ -117,33 +117,67 @@ public class CSampler {
             Log.d("BUFF"+a, bufferPrint(nbuff));
     }
 
+    private double toSee = 1;
+    private boolean rising = true;
+
     private String bufferPrint(short[] buffer){
         StringBuilder sb = new StringBuilder();
         sb.append("[");
         short prev = buffer[0];
         int count = 0;
+        boolean shouldBeNegative = false;
         for(short s : buffer){
             int abs = Math.abs(s-prev);
-            if( Math.abs(s) >= 10 && Math.abs(s) <= 30 && abs < 60 && abs > 20 ) {
+            if( Math.abs(s) >= 10 && Math.abs(s) <= 50 && abs < 100 && abs > 20 ) {
+                //if(s > 0 && !shouldBeNegative){
+//                    sb.append(s);
+//                    sb.append(" ");
+                    shouldBeNegative = true;
+//                } else if (s < 0 && shouldBeNegative){
+//                    sb.append(s);
+//                    sb.append(" ");
+//                    shouldBeNegative = false;
+//                }
 //                sb.append(prev);
 //                sb.append("~");
-//                sb.append(s);
-//                sb.append(" ");
                 count++;
             }
-//            prev = s;
+            prev = s;
         }
         double density = (count * 100.0) / buffer.length;
-            sb.append(density);
-        if(density > 1){
-            block++;
-            // TODO: 23/01/2017 Reset if saw 0 valued && fuse with the accelerometer to eliminate random noise
-            if(block == bound){
-                Log.e("LOL", "SCRATCH");
-                block = 0;
+        // TODO: 26/01/2017 NEED TO SEE THE "HILL" - density rises up to ~30% and then drops smoothly
+        if(density > toSee){
+            if(rising) {
+                toSee = density;
+                block++;
+                sb.append(density);
+
+                if (toSee > 15 && toSee < 40) {
+                    sb.append(" ??? "+density+" ??? ");
+                    rising = false;
+                }
+            } else {
+                toSee = 1;
+            }
+        } else if (density < toSee && density > 0.0){
+            if(!rising) {
+                toSee = density;
+                block++;
+                sb.append(density);
+                if (density < 3) {
+                    sb.append(" !!! "+density+" !!! ");
+                    Log.e("LOL", "SCRATCH");
+                    block = 0;
+                    rising = true;
+                    toSee = 1;
+                }
+            } else {
+                rising = true;
+                toSee = 1;
             }
         } else if(density == 0.0){
             block = 0;
+            rising = true;
         }
 
         sb.append("]");

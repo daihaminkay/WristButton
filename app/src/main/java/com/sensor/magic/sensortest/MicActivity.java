@@ -31,6 +31,7 @@ public class MicActivity extends Activity implements SensorEventListener {
     private CSampler sampler;
     private LinearLayout layout;
     private FileWriter fw;
+    private TextView tv;
 
     private SensorManager mSensorManager;
     private Sensor mAccel;
@@ -41,6 +42,7 @@ public class MicActivity extends Activity implements SensorEventListener {
         setContentView(R.layout.activity_mic);
         //mdrawer = (CDrawer) findViewById(R.id.drawer);
         layout = (LinearLayout) findViewById(R.id.mic_layout);
+        tv = (TextView) findViewById(R.id.mic_text);
         m_bStart = Boolean.valueOf(false);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
@@ -220,7 +222,7 @@ public class MicActivity extends Activity implements SensorEventListener {
                 recognised = false;
             }
 
-            if (sensorData.size() > 10) {
+            if (sensorData.size() > 30) {
                 boolean negAcc = true;
                 for(int i = sensorData.size()-1; i > sensorData.size() - 11; i--){
                     if(sensorData.get(i).getX() > -2){
@@ -228,10 +230,8 @@ public class MicActivity extends Activity implements SensorEventListener {
                     }
                 }
                 if(negAcc){
-                    Log.e("MIC", "GOT HERE");
-                    TextView lol = new TextView(this.getApplicationContext());
-                    lol.setText("DOWN SCRATCH");
-                    layout.addView(lol);
+                    //Log.e("MIC", "GOT HERE");
+                    tv.setText("DOWN SCRATCH");
                 }
             }
         }
