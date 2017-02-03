@@ -104,8 +104,7 @@ public class CSampler {
     public void Sample() {
         mSamplesRead = ar.read(buffer, 0, buffersizebytes);
         short[] nbuff = new short[buffer.length];
-        // TODO: 19/01/17 Play around with the 'a' value
-        double RC = 1.0/(10000*2*3.14);
+        double RC = 1.0/(12000*2*3.14);
         double dt = 1.0/16000;
         double a = RC/(RC + dt);
         nbuff[0] = buffer[0];
@@ -119,6 +118,15 @@ public class CSampler {
 
     private double toSee = 1;
     private boolean rising = true;
+    private boolean scratch = false;
+
+    public void toggleScratch(){
+        scratch = false;
+    }
+
+    public boolean getScratch(){
+        return scratch;
+    }
 
     private String bufferPrint(short[] buffer){
         StringBuilder sb = new StringBuilder();
@@ -146,38 +154,45 @@ public class CSampler {
         }
         double density = (count * 100.0) / buffer.length;
         // TODO: 26/01/2017 NEED TO SEE THE "HILL" - density rises up to ~30% and then drops smoothly
-        if(density > toSee){
-            if(rising) {
-                toSee = density;
-                block++;
-                sb.append(density);
+        if(Math.abs(density-toSee) < 20){
+            if(density > toSee){
+                if(rising) {
+                    toSee = density;
+                    block++;
+                    sb.append(density);
 
-                if (toSee > 15 && toSee < 40) {
-                    sb.append(" ??? "+density+" ??? ");
-                    rising = false;
+                    if (toSee > 15 && toSee < 40) {
+                        sb.append(" ??? "+density+" ??? ");
+                        rising = false;
+                    }
+                } else {
+                    block = 0;
+                    toSee = 1;
+                    rising = true;
                 }
-            } else {
-                toSee = 1;
-            }
-        } else if (density < toSee && density > 0.0){
-            if(!rising) {
-                toSee = density;
-                block++;
-                sb.append(density);
-                if (density < 3) {
-                    sb.append(" !!! "+density+" !!! ");
-                    Log.e("LOL", "SCRATCH");
+            } else if (density < toSee && density > 0.0){
+                if(!rising) {
+                    toSee = density;
+                    block++;
+                    sb.append(density);
+                    if (density < 3 && toSee != 1) {
+                        sb.append(" !!! "+density+" !!! ");
+                        Log.e("LOL", "SCRATCH");
+                        scratch = true;
+                        block = 0;
+                        rising = true;
+                        toSee = 1;
+                    }
+                } else {
                     block = 0;
                     rising = true;
                     toSee = 1;
                 }
             } else {
-                rising = true;
+                block = 0;
                 toSee = 1;
+                rising = true;
             }
-        } else if(density == 0.0){
-            block = 0;
-            rising = true;
         }
 
         sb.append("]");

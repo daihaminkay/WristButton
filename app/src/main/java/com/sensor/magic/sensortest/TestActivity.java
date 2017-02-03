@@ -96,7 +96,6 @@ public class TestActivity extends WearableActivity implements SensorEventListene
             //Attempt to eliminate non-knock movements
             if (Math.abs(x - prevX) > 15 || Math.abs(z - prevZ) > 15) {
 
-                // TODO: 22/12/2016 Able to learn from input, need to specify some exact gesture input
                 DenseInstance di = new DenseInstance(3);
                 di.setValue(0, x);
                 di.setValue(1, y);

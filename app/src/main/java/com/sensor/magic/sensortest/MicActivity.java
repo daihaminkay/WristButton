@@ -201,6 +201,9 @@ public class MicActivity extends Activity implements SensorEventListener {
         }
     }
 
+    // TODO: 03/02/2017 use this to live log the density data to see what is up. 
+    public static ArrayList<String> densities = new ArrayList<>();
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         float x = event.values[0];
@@ -222,16 +225,21 @@ public class MicActivity extends Activity implements SensorEventListener {
                 recognised = false;
             }
 
-            if (sensorData.size() > 30) {
+            if (sensorData.size() > 50) {
                 boolean negAcc = true;
                 for(int i = sensorData.size()-1; i > sensorData.size() - 11; i--){
                     if(sensorData.get(i).getX() > -2){
                         negAcc = false;
                     }
                 }
-                if(negAcc){
+                if(negAcc && sampler.getScratch()){
                     //Log.e("MIC", "GOT HERE");
                     tv.setText("DOWN SCRATCH");
+                    sampler.toggleScratch();
+                    sensorData.clear();
+                } else {
+                    tv.setText("NOPE");
+                    sensorData.clear();
                 }
             }
         }

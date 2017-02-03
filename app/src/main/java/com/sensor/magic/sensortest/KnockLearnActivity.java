@@ -101,7 +101,6 @@ public class KnockLearnActivity extends WearableActivity implements SensorEventL
         mSensorManager.unregisterListener(this);
     }
 
-    // TODO: 30/12/2016 FINISH LEARNING ACTIVITY
     @Override
     public void onSensorChanged(SensorEvent event) {
         float x = event.values[0];
