@@ -10,7 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -29,20 +29,30 @@ public class MicActivity extends Activity implements SensorEventListener {
     private Boolean m_bStart = Boolean.valueOf(false);
     private Boolean recording;
     private CSampler sampler;
-    private LinearLayout layout;
+    private RelativeLayout layout;
     private FileWriter fw;
     private TextView tv;
+    private TextView tacc;
 
     private SensorManager mSensorManager;
     private Sensor mAccel;
+    private boolean live = true;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mic);
         //mdrawer = (CDrawer) findViewById(R.id.drawer);
-        layout = (LinearLayout) findViewById(R.id.mic_layout);
+        layout = (RelativeLayout) findViewById(R.id.mic_layout);
         tv = (TextView) findViewById(R.id.mic_text);
+        tacc = (TextView) findViewById(R.id.mic_raw_acc);
+        tacc.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                live = !live;
+                return false;
+            }
+        });
         m_bStart = Boolean.valueOf(false);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
@@ -202,7 +212,6 @@ public class MicActivity extends Activity implements SensorEventListener {
     }
 
     // TODO: 03/02/2017 use this to live log the density data to see what is up. 
-    public static ArrayList<String> densities = new ArrayList<>();
 
     @Override
     public void onSensorChanged(SensorEvent event) {
@@ -225,22 +234,72 @@ public class MicActivity extends Activity implements SensorEventListener {
                 recognised = false;
             }
 
-            if (sensorData.size() > 50) {
+            if (sensorData.size() > 30) {
                 boolean negAcc = true;
-                for(int i = sensorData.size()-1; i > sensorData.size() - 11; i--){
-                    if(sensorData.get(i).getX() > -2){
-                        negAcc = false;
+                boolean posAcc = true;
+                // TODO: 05/02/2017 Rewrite the loop to look for a ascending/descending pattern of negatives 
+//                for(int i = sensorData.size()-1; i > sensorData.size() - 11; i--){
+//                    if(sensorData.get(i).getX() > -1){
+//                        negAcc = false;
+//                    }
+//                }
+                int threshold = 10;
+                boolean startDown = false;
+                boolean startUp = false;
+                for(int i = 0; i < sensorData.size(); i++){
+                    double current = sensorData.get(i).getX();
+
+                    if(startDown){
+                        if(current < -4){
+                            threshold--;
+                        } else {
+                            if(threshold > 0){
+                                negAcc = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if(startUp){
+                        if(current > 4){
+                            threshold--;
+                        } else {
+                            if(threshold > 0){
+                                posAcc = false;
+                                break;
+                            }
+                        }
+                    }
+
+                    if(!startUp && !startDown){
+                        if(current < -4)
+                            startDown = true;
+                        else if(current > 4)
+                            startUp = true;
                     }
                 }
-                if(negAcc && sampler.getScratch()){
+
+                if(sampler.getScratch()){
                     //Log.e("MIC", "GOT HERE");
-                    tv.setText("DOWN SCRATCH");
+                    if(negAcc){
+                        tv.setText("DOWN SCRATCH");
+                        sensorData.clear();
+                    } else if(posAcc) {
+                        tv.setText("UP SCRATCH");
+                        sensorData.clear();
+                    }
                     sampler.toggleScratch();
-                    sensorData.clear();
-                } else {
+                } else if (Math.abs(x) > 4 || Math.abs(y) > 4 || Math.abs(z) > 4){
                     tv.setText("NOPE");
-                    sensorData.clear();
+                    if(sampler.getScratch()){
+                        tacc.setText(ViewRawActivity.anythingToString(sensorData));
+                    }
                 }
+                if(!sensorData.isEmpty())
+                    sensorData.remove(0);
+            }
+            if(live && (Math.abs(x) > 2 || Math.abs(y) > 2 || Math.abs(z) > 2)) {
+                //tacc.setText(ViewRawActivity.anythingToString(sensorData));
             }
         }
     }

@@ -19,7 +19,7 @@ public class CSampler {
     private int audioEncoding = 2;
     private int buffersizebytes;
     private int buflen;
-    private int channelConfiguration = 16;
+    private int channelConfiguration = 12;
     private int mSamplesRead;
     private Boolean m_bDead = Boolean.valueOf(false);
     private Boolean m_bDead2 = Boolean.valueOf(true);
@@ -128,6 +128,9 @@ public class CSampler {
         return scratch;
     }
 
+    boolean beforePeak = true;
+    boolean sawEmpty = false;
+
     private String bufferPrint(short[] buffer){
         StringBuilder sb = new StringBuilder();
         sb.append("[");
@@ -136,11 +139,11 @@ public class CSampler {
         boolean shouldBeNegative = false;
         for(short s : buffer){
             int abs = Math.abs(s-prev);
-            if( Math.abs(s) >= 10 && Math.abs(s) <= 50 && abs < 100 && abs > 20 ) {
-                //if(s > 0 && !shouldBeNegative){
+            if( Math.abs(s) >= 10 && Math.abs(s) <= 100 && abs < 100 && abs > 50 ) {
+//                if(s > 0 && !shouldBeNegative){
 //                    sb.append(s);
 //                    sb.append(" ");
-                    shouldBeNegative = true;
+//                    shouldBeNegative = true;
 //                } else if (s < 0 && shouldBeNegative){
 //                    sb.append(s);
 //                    sb.append(" ");
@@ -157,13 +160,17 @@ public class CSampler {
         if(Math.abs(density-toSee) < 20){
             if(density > toSee){
                 if(rising) {
-                    toSee = density;
-                    block++;
-                    sb.append(density);
-
-                    if (toSee > 15 && toSee < 40) {
+                    //Peak
+                    if (toSee > 15 && toSee < 30 && !beforePeak) {
+                        toSee = density;
+                        block++;
                         sb.append(" ??? "+density+" ??? ");
                         rising = false;
+                    } else {
+                        toSee = density;
+                        block++;
+                        sb.append(density);
+                        beforePeak = false;
                     }
                 } else {
                     block = 0;
@@ -175,7 +182,7 @@ public class CSampler {
                     toSee = density;
                     block++;
                     sb.append(density);
-                    if (density < 3 && toSee != 1) {
+                    if (density < 3 && toSee != 1 && !beforePeak) {
                         sb.append(" !!! "+density+" !!! ");
                         Log.e("LOL", "SCRATCH");
                         scratch = true;
