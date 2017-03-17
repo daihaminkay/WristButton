@@ -52,7 +52,7 @@ public class SensorActivity extends WearableActivity {
     }
 
     public void startAudio(View view) {
-        Intent intent = new Intent(this, MicActivity.class);
+        Intent intent = new Intent(this, ModeActivity.class);
         startActivity(intent);
     }
 

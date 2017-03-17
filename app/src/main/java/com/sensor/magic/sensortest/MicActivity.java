@@ -2,6 +2,7 @@ package com.sensor.magic.sensortest;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -10,7 +11,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -20,42 +21,45 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class MicActivity extends Activity implements SensorEventListener {
-//    private CDrawer.CDrawThread mDrawThread;
-//    private CDrawer mdrawer;
 
     private ArrayList<AccelData> sensorData = new ArrayList<>();
-    private boolean recognised;
-    private View.OnClickListener listener;
-    private Boolean m_bStart = Boolean.valueOf(false);
-    private Boolean recording;
     private CSampler sampler;
-    private RelativeLayout layout;
+    private LinearLayout layout;
     private FileWriter fw;
     private TextView tv;
-    private TextView tacc;
+    private TextView tv2;
 
     private SensorManager mSensorManager;
+    private Sensor mGyro;
     private Sensor mAccel;
-    private boolean live = true;
+    private boolean useAccel;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mic);
         //mdrawer = (CDrawer) findViewById(R.id.drawer);
-        layout = (RelativeLayout) findViewById(R.id.mic_layout);
+        layout = (LinearLayout) findViewById(R.id.mic_layout);
         tv = (TextView) findViewById(R.id.mic_text);
-        tacc = (TextView) findViewById(R.id.mic_raw_acc);
-        tacc.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                live = !live;
-                return false;
-            }
-        });
-        m_bStart = Boolean.valueOf(false);
+        tv2 = (TextView) findViewById(R.id.mic_text2);
+
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+        mGyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
         mAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            String mode = extras.getString("MODE");
+            switch (mode) {
+                case "RAISE":
+                    useAccel = true;
+                    break;
+                case "ROTATE":
+                    useAccel = false;
+                    break;
+            }
+            //The key argument here must match that used in the other activity
+        }
 
         File f = new File(getApplicationContext().getFilesDir().getPath() + "micdata.txt");
         if (!f.exists()) {
@@ -73,7 +77,6 @@ public class MicActivity extends Activity implements SensorEventListener {
         }
 
         while (true) {
-            recording = Boolean.valueOf(false);
             run();
             System.out.println("mDrawThread NOT NULL");
             System.out.println("recorder NOT NULL");
@@ -101,7 +104,6 @@ public class MicActivity extends Activity implements SensorEventListener {
      */
     @Override
     protected void onRestart() {
-        m_bStart = Boolean.valueOf(true);
         System.out.println("onRestart");
         super.onRestart();
     }
@@ -111,7 +113,8 @@ public class MicActivity extends Activity implements SensorEventListener {
      */
     @Override
     protected void onResume() {
-        mSensorManager.registerListener(this, mAccel, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, mGyro, SensorManager.SENSOR_DELAY_UI);
+        mSensorManager.registerListener(this, mAccel, SensorManager.SENSOR_DELAY_UI);
         System.out.println("onresume");
         int i = 0;
         while (true) {
@@ -122,7 +125,6 @@ public class MicActivity extends Activity implements SensorEventListener {
 //                    mdrawer.Restart(Boolean.valueOf(true));
                 sampler.SetSleeping(Boolean.valueOf(false));
                 //mDrawThread.SetSleeping(Boolean.valueOf(false));
-                m_bStart = Boolean.valueOf(false);
                 super.onResume();
                 return;
             }
@@ -187,15 +189,6 @@ public class MicActivity extends Activity implements SensorEventListener {
             Toast localToast = Toast.makeText(localContext, "Please make some noise..", Toast.LENGTH_LONG);
             localToast.setGravity(48, 0, localDisplay.getHeight() / 8);
             localToast.show();
-            listener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (sampler.getRecordingTrue())
-                        sampler.StopRecording();
-                    else
-                        sampler.StartRecording();
-                }
-            };
             //mdrawer.setOnClickListener(listener);
             if (sampler != null) {
                 sampler.Init();
@@ -213,93 +206,169 @@ public class MicActivity extends Activity implements SensorEventListener {
 
     // TODO: 03/02/2017 use this to live log the density data to see what is up. 
 
+    boolean tilt = false;
+    int threshold = 0;
+
+    boolean tilted = false;
+
+    float position = 0;
+    int posCount = 0;
+    boolean set = false;
+    boolean ready = false;
+    double fixY = 0;
+    boolean up = false;
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         float x = event.values[0];
         float y = event.values[1];
         float z = event.values[2];
         long timestamp = System.currentTimeMillis();
-        AccelData dat = new AccelData(timestamp, x, y, z);
-        sensorData.add(dat);
-        if (sensorData.size() > 1) {
-            AccelData prev = sensorData.get(sensorData.size() - 2);
-            //Attempt to eliminate non-knock movements
-            double absX = Math.abs(x - prev.getX());
-            double absY = Math.abs(y - prev.getY());
-            double absZ = Math.abs(z - prev.getZ());
-            if (!recognised && absZ > 25) {
-                sampler.StopRecording();
-                recognised = true;
-            } else if (recognised && absX < 1 && absY < 1 && absZ < 1) {
-                recognised = false;
+
+        if(!set) {
+            fixY = tv.getTextSize();
+            set = true;
+        }
+
+        Sensor sens = event.sensor;
+
+        if(sens.getType() == Sensor.TYPE_LINEAR_ACCELERATION && tilted && useAccel) {
+            if(Math.abs(y) > 2 && ready) {
+                position += y;
+
+                tv.setBackgroundColor(Color.YELLOW);
+                if(y > 0 && !up ) {
+                    //Log.e("ACCEL", "Y: "+y);
+                    fixY = fixY-y;
+                    tv.setText(String.valueOf(fixY));
+                    ready = false;
+                    up = true;
+                    posCount = 0;
+                } else if(y < 0 && up){
+                    //Log.e("ACCEL", "Y: "+y);
+                    fixY = fixY-y;
+                    tv.setText(String.valueOf(fixY));
+                    ready = false;
+                    up = false;
+                    posCount = 0;
+                }
+
+                //tv.setText(z > 0 ? "UP" : "DOWN");
+            } else {
+                posCount++;
+                if (!ready){
+                    Log.e("ACCEL", "Yyyyyyyyyyyyyyyyyyyyyyyyyy");
+                    if(posCount > 10){
+                        ready = true;
+                        Log.e("ACCEL", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa    "+posCount);
+                    }
+                }
+
+                if (posCount > 50) {
+                    posCount = 0;
+                    position = 0;
+                    tilted = false;
+                    set = false;
+                    tv.setBackgroundColor(Color.RED);
+                    tv2.setBackgroundColor(Color.RED);
+                }
             }
+        } else if(sens.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR && !tilted) {
+            float[] rotMat = new float[9];
+            float[] vals = new float[3];
 
-            if (sensorData.size() > 30) {
-                boolean negAcc = true;
-                boolean posAcc = true;
-                // TODO: 05/02/2017 Rewrite the loop to look for a ascending/descending pattern of negatives 
-//                for(int i = sensorData.size()-1; i > sensorData.size() - 11; i--){
-//                    if(sensorData.get(i).getX() > -1){
-//                        negAcc = false;
-//                    }
-//                }
-                int threshold = 10;
-                boolean startDown = false;
-                boolean startUp = false;
-                for(int i = 0; i < sensorData.size(); i++){
-                    double current = sensorData.get(i).getX();
+            if ((Math.abs(x) > 0.05 || Math.abs(y) > 0.05 || Math.abs(z) > 0.05)) {
+                SensorManager.getRotationMatrixFromVector(rotMat, event.values);
+                SensorManager.remapCoordinateSystem(rotMat,
+                        SensorManager.AXIS_X, SensorManager.AXIS_Z, vals);
+                SensorManager.getOrientation(rotMat, vals);
 
-                    if(startDown){
-                        if(current < -4){
-                            threshold--;
-                        } else {
-                            if(threshold > 0){
-                                negAcc = false;
-                                break;
-                            }
+                // Optionally convert the result from radians to degrees
+                vals[0] = (float) Math.toDegrees(vals[0]);
+                vals[1] = (float) Math.toDegrees(vals[1]);
+                vals[2] = (float) Math.toDegrees(vals[2]);
+                final AccelData dat = new AccelData(timestamp, vals[0], vals[1], vals[2]);
+                sensorData.add(dat);
+                if (sampler.getScratch()) {
+                    tv2.setText("SOUND");
+                    tv2.setBackgroundColor(Color.MAGENTA);
+                }
+                if (sensorData.size() > 9) {
+                    AccelData prev = sensorData.get(sensorData.size() - 10);
+                    //Attempt to eliminate non-knock movements
+                    double absZ = Math.abs(vals[2] - prev.getZ());
+                    //tv.setText("LOL: " + Math.round(absZ));
+                    if (!tilt && absZ > 20 && absZ < 30) {
+                        Log.d("AAAAA", "GOT FIRST");
+                        tilt = true;
+                    } else if (tilt && absZ < 5 && ++threshold > 5) {
+                        tv.setText("TILT");
+                        if (sampler.getScratch()) {
+                            Log.d("CCCCCC", "GOT THIRD");
+                            tv.setText("TOUCH");
+                            tv.setBackgroundColor(Color.BLUE);
+                            tv2.setText("TOUCH");
+                            tv2.setBackgroundColor(Color.BLUE);
+                            tilt = false;
+                            tilted = true;
+                            fixY = y;
+                            threshold = 0;
+                            sampler.toggleScratch();
                         }
-                    }
-
-                    if(startUp){
-                        if(current > 4){
-                            threshold--;
-                        } else {
-                            if(threshold > 0){
-                                posAcc = false;
-                                break;
-                            }
+                    } else if (tilt && absZ > 5) {
+                        tv.setText("NOPE");
+                        tv.setBackgroundColor(Color.RED);
+                        if (!sampler.getScratch()) {
+                            tv2.setText("NOPE");
+                            tv2.setBackgroundColor(Color.RED);
                         }
-                    }
-
-                    if(!startUp && !startDown){
-                        if(current < -4)
-                            startDown = true;
-                        else if(current > 4)
-                            startUp = true;
+                        //tilt = false;
                     }
                 }
 
-                if(sampler.getScratch()){
-                    //Log.e("MIC", "GOT HERE");
-                    if(negAcc){
-                        tv.setText("DOWN SCRATCH");
-                        sensorData.clear();
-                    } else if(posAcc) {
-                        tv.setText("UP SCRATCH");
-                        sensorData.clear();
-                    }
-                    sampler.toggleScratch();
-                } else if (Math.abs(x) > 4 || Math.abs(y) > 4 || Math.abs(z) > 4){
-                    tv.setText("NOPE");
-                    if(sampler.getScratch()){
-                        tacc.setText(ViewRawActivity.anythingToString(sensorData));
-                    }
-                }
-                if(!sensorData.isEmpty())
+                if (sensorData.size() > 15) {
                     sensorData.remove(0);
+                }
             }
-            if(live && (Math.abs(x) > 2 || Math.abs(y) > 2 || Math.abs(z) > 2)) {
-                //tacc.setText(ViewRawActivity.anythingToString(sensorData));
+        } else if (sens.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR && tilted && !useAccel){
+            float[] rotMat = new float[9];
+            float[] vals = new float[3];
+
+            if ((Math.abs(x) > 0.05 || Math.abs(y) > 0.05 || Math.abs(z) > 0.05)) {
+                SensorManager.getRotationMatrixFromVector(rotMat, event.values);
+                SensorManager.remapCoordinateSystem(rotMat,
+                        SensorManager.AXIS_X, SensorManager.AXIS_Z, vals);
+                SensorManager.getOrientation(rotMat, vals);
+
+                // Optionally convert the result from radians to degrees
+                vals[0] = (float) Math.toDegrees(vals[0]);
+                vals[1] = (float) Math.toDegrees(vals[1]);
+                vals[2] = (float) Math.toDegrees(vals[2]);
+                final AccelData dat = new AccelData(timestamp, vals[0], vals[1], vals[2]);
+                sensorData.add(dat);
+                if(sensorData.size() > 3) {
+                    AccelData prev = sensorData.get(sensorData.size() - 3);
+                    //Attempt to eliminate non-knock movements
+                    double absY = Math.abs(vals[1] - prev.getY());
+                        tv.setText(String.valueOf((int)(fixY-vals[1])));
+
+
+                    if(absY < 1){
+                        if(++posCount > 50){
+                            tv.setBackgroundColor(Color.RED);
+                            tv2.setBackgroundColor(Color.RED);
+                            tilted = false;
+                            posCount = 0;
+                            fixY = tv.getTextSize();
+                        }
+                    } else {
+                        posCount = 0;
+                    }
+
+                    if(sensorData.size() > 30){
+                        sensorData.remove(0);
+                    }
+                }
             }
         }
     }

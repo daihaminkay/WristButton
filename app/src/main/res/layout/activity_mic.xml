@@ -1,19 +1,32 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/mic_layout"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:keepScreenOn="true">
+    android:keepScreenOn="true"
+    android:layout_weight="2"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/mic_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:textSize="20pt"
-        android:text="@string/hello_world"
+        android:text="LOL"
+        android:layout_weight="1"
         />
 
-    <ScrollView
+    <TextView
+        android:id="@+id/mic_text2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="20pt"
+        android:text="SAS"
+        android:layout_weight="1"
+        />
+
+    <!--ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
         <TextView
@@ -24,6 +37,6 @@
             android:textSize="4pt"
             android:text="@string/hello_world"
             />
-    </ScrollView>
+    </ScrollView-->
 
-</RelativeLayout>
+</LinearLayout>

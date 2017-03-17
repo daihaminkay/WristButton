@@ -139,24 +139,30 @@ public class CSampler {
         boolean shouldBeNegative = false;
         for(short s : buffer){
             int abs = Math.abs(s-prev);
-            if( Math.abs(s) >= 10 && Math.abs(s) <= 100 && abs < 100 && abs > 50 ) {
-//                if(s > 0 && !shouldBeNegative){
-//                    sb.append(s);
-//                    sb.append(" ");
-//                    shouldBeNegative = true;
-//                } else if (s < 0 && shouldBeNegative){
-//                    sb.append(s);
-//                    sb.append(" ");
-//                    shouldBeNegative = false;
-//                }
-//                sb.append(prev);
-//                sb.append("~");
+            if( Math.abs(s) >= 20 && Math.abs(s) <= 150 && abs < 80 && abs > 10 ) {
+                //sb.append(" > "+prev + "--" + s +" < ");
                 count++;
             }
             prev = s;
         }
         double density = (count * 100.0) / buffer.length;
-        // TODO: 26/01/2017 NEED TO SEE THE "HILL" - density rises up to ~30% and then drops smoothly
+        //sb.append(density);
+        // TODO: 26/01/2017 NEED TO SEE THE Gradual rise to 17
+//         if(density > 4 && density < 8){
+//             toSee = 15;
+//             sb.append("Stage 1: "+density);
+//         }
+//         else if(toSee == 15 && density > 8 && density < 18){
+//             toSee = 20;
+//             //sb.append("Stage 2: " + density);
+//         }
+//         else if(toSee == 20 && density > 18 && density < 24){
+//             //sb.append("GOTCHA: " + density);
+//             Log.e("LOL", "TOUCH");
+//             toSee = 1;
+//         } else if (density < 4) {
+//             toSee = 1;
+//         }
         if(Math.abs(density-toSee) < 20){
             if(density > toSee){
                 if(rising) {
@@ -182,7 +188,7 @@ public class CSampler {
                     toSee = density;
                     block++;
                     sb.append(density);
-                    if (density < 3 && toSee != 1 && !beforePeak) {
+                    if (density < 15 && toSee != 1 && !beforePeak) {
                         sb.append(" !!! "+density+" !!! ");
                         Log.e("LOL", "SCRATCH");
                         scratch = true;

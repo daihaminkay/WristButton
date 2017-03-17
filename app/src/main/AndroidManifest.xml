@@ -61,6 +61,10 @@
             android:name=".MicActivity"
             android:label="@string/title_activity_mic"
             android:theme="@android:style/Theme.DeviceDefault.Light" />
+        <activity
+            android:name=".ModeActivity"
+            android:label="@string/title_activity_mode"
+            android:theme="@android:style/Theme.DeviceDefault.Light"></activity>
     </application>
 
 </manifest>
