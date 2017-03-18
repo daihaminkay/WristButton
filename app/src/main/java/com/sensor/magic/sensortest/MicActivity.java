@@ -264,7 +264,7 @@ public class MicActivity extends Activity implements SensorEventListener {
                     }
                 }
 
-                if (posCount > 50) {
+                if (posCount > 100) {
                     posCount = 0;
                     position = 0;
                     tilted = false;
@@ -321,8 +321,10 @@ public class MicActivity extends Activity implements SensorEventListener {
                         if (!sampler.getScratch()) {
                             tv2.setText("NOPE");
                             tv2.setBackgroundColor(Color.RED);
+                            tilt = false;
+                        } else {
+                            //sampler.toggleScratch();
                         }
-                        //tilt = false;
                     }
                 }
 
@@ -354,7 +356,7 @@ public class MicActivity extends Activity implements SensorEventListener {
 
 
                     if(absY < 1){
-                        if(++posCount > 50){
+                        if(++posCount > 100){
                             tv.setBackgroundColor(Color.RED);
                             tv2.setBackgroundColor(Color.RED);
                             tilted = false;

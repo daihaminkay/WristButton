@@ -9,27 +9,14 @@
     tools:deviceIds="wear">
 
     <TextView
-        android:id="@+id/knock_raw"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="@string/hello_world"
-        app:layout_box="all" />
-
-    <TextView
         android:id="@+id/knock_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
         android:textSize="15pt"
         android:text="@string/hello_world"
         app:layout_box="all" />
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="LOG"
-        android:onClick="showLog"
-        android:layout_gravity="top|right"/>
 
 
 </android.support.wearable.view.BoxInsetLayout>

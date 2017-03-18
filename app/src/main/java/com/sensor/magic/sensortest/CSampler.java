@@ -188,7 +188,7 @@ public class CSampler {
                     toSee = density;
                     block++;
                     sb.append(density);
-                    if (density < 15 && toSee != 1 && !beforePeak) {
+                    if (density < 9 && toSee != 1 && !beforePeak) {
                         sb.append(" !!! "+density+" !!! ");
                         Log.e("LOL", "SCRATCH");
                         scratch = true;

@@ -1,6 +1,7 @@
 package com.sensor.magic.sensortest;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -27,7 +28,6 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
     private ArrayList<AccelData> sensorData = new ArrayList<>();
     private BoxInsetLayout mContainerView;
     private TextView mTextView;
-    private TextView mRawView;
     private SensorManager mSensorManager;
     private Sensor mAccel;
     private Sensor mGyro;
@@ -48,7 +48,6 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
 
         mContainerView = (BoxInsetLayout) findViewById(R.id.knock_container);
         mTextView = (TextView) findViewById(R.id.knock_text);
-        mRawView = (TextView) findViewById(R.id.knock_raw);
         mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         mAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         mGyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
@@ -92,7 +91,7 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mAccel, SensorManager.SENSOR_DELAY_FASTEST);
-        mSensorManager.registerListener(this, mGyro, SensorManager.SENSOR_DELAY_FASTEST);
+        mSensorManager.registerListener(this, mGyro, SensorManager.SENSOR_DELAY_UI);
 
     }
 
@@ -161,21 +160,34 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
 //                    mTextView.setText("2-FINGER TAP");
 //                    recognised = true;
 //                } else
-                if (!recognised && absZ > 25) {
+                if (!recognised && absZ > 30 ) {
                     log.add(String.valueOf(absZ));
-                    mRawView.setText("ЖОПА");
                     if (pendingRotation != null) {
-                        mRawView.setText("2 ЖОПЫ");
-                        if (interval(-90, pendingRotation.getZ(), -60)) {
-
-                            if (interval(46, pendingRotation.getY(), 60))
-                                mTextView.setText("RIGHT CHEST\n" + pendingRotation.toString());
-                            else if (interval(20, pendingRotation.getY(), 45)) {
-                                mTextView.setText("LEFT CHEST\n" + pendingRotation.toString());
+                        if (interval(-120, pendingRotation.getZ(), -60)) {
+                            if (interval(46, pendingRotation.getY(), 60)) {
+                                mTextView.setText("RIGHT CHEST");
+                                mTextView.setBackgroundColor(Color.CYAN);
+                            } else if (interval(20, pendingRotation.getY(), 45)) {
+                                mTextView.setText("LEFT CHEST ");
+                                mTextView.setBackgroundColor(Color.MAGENTA);
                             } else {
                                 mTextView.setText("KNOCK\n" + pendingRotation.toString());
                             }
+                        } else if (interval(60, pendingRotation.getZ(), 120)) {
+                            if (interval(46, pendingRotation.getY(), 60)) {
+                                mTextView.setText("LEFT CHEST");
+                                mTextView.setBackgroundColor(Color.MAGENTA);
+                            } else if (interval(20, pendingRotation.getY(), 45)) {
+                                mTextView.setText("RIGHT CHEST");
+                                mTextView.setBackgroundColor(Color.CYAN);
+                            } else {
+                                mTextView.setText("KNOCK\n" + pendingRotation.toString());
+                            }
+                        } else {
+                            mTextView.setText("KNOCK\n" + pendingRotation.toString());
+                            mTextView.setBackgroundColor(Color.YELLOW);
                         }
+
                     } else {
                         mTextView.setText("KNOCK");
                     }
@@ -187,8 +199,8 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
                     //                }
                 } else if (!recognised && absZ > 5) {
                     log.add(String.valueOf(absZ));
-                    mRawView.setText(queueToString(log));
-                    mTextView.setText("SHAKE\n" + absZ);
+                    mTextView.setText("SHAKE");
+                    mTextView.setBackgroundColor(Color.WHITE);
                     //                try {
                     //                    mRawView.setText(String.valueOf(classifier.classifyInstance(di)));
                     //                } catch (Exception e) {
@@ -225,17 +237,6 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
 
     }
 
-    public void showLog(View view) {
-        int vis = mRawView.getVisibility();
-        switch (vis) {
-            case View.VISIBLE:
-                mRawView.setVisibility(View.INVISIBLE);
-                break;
-            case View.INVISIBLE:
-                mRawView.setVisibility(View.VISIBLE);
-                break;
-        }
-    }
 
     private enum Sign {POSITIVE, NEGATIVE, ANY}
 }

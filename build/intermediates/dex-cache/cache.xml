@@ -3,111 +3,111 @@
 
     <item
         is-multidex="false"
-        jar="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-wearable/8.4.0/jars/classes.jar"
+        jar="C:\Users\Alex\Documents\CompleteSensorTest\app\libs\wekaSTRIPPED.jar"
         jumboMode="false"
         optimize="true"
-        revision="23.0.2"
-        sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-wearable-8.4.0_2c47c0f0f64e7c2df1d074265c69195657f07108.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/alexanderdubrovin/Library/Android/sdk/extras/android/m2repository/com/android/support/support-annotations/23.0.1/support-annotations-23.0.1.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
-        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/support-annotations-23.0.1_b51aedb9ffdcd3e93b97a9f26298177a5d3102e0.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/libs/achartengine-1.2.0.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
-        sha1="44c4ea00fc579ec8318af7b17a2e7eea54a3dbde">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/achartengine-1.2.0_b44f52d66e1ebed86e98838251c39e78637ce4e2.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/libs/wekaSTRIPPED.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
+        revision="25.0.0"
         sha1="1d553332d3346a8efe1d52000973115cc5ef975d">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/wekaSTRIPPED_c03623db7d831e5bb950131def1fcefba335f53c.jar" />
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\wekaSTRIPPED_c3ac98de8a0c02404aa34d05208da6aef9c3db16.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/exploded-aar/com.github.Semantive/waveform-android/v1.2/jars/classes.jar"
+        jar="C:\Users\Alex\.android\build-cache\b0fb1a6239a6c33b93a0ce21b9aa818d30f6e07c\output\jars\classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="23.0.2"
-        sha1="e5c58cbbcedcfa2d5c0ed5c050ca8bfadeb63f18">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/com.github.Semantive-waveform-android-v1.2_413448df8f7d6b8aecf23e7c284530ff0593953d.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/exploded-aar/com.android.support/recyclerview-v7/22.0.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
-        sha1="c6d79137693d494dee16372d3921f919eb724ced">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/com.android.support-recyclerview-v7-22.0.0_69d533fdf1ccc819bd4073b575c310fe235cb101.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/exploded-aar/com.android.support/appcompat-v7/23.0.1/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
-        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/com.android.support-appcompat-v7-23.0.1_5529f0dc6570d6ed10167451212f2cd207ed983c.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/exploded-aar/com.google.android.support/wearable/1.3.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
-        sha1="58b928ccbaf9090c632f278d6bd31e1ae42f2457">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/com.google.android.support-wearable-1.3.0_c509c32f80e0f36a8cd3ae4d177cd744b67f7bac.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars/libs/internal_impl-23.0.1.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
-        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/internal_impl-23.0.1_1aec2815fc26bd78d39e383c83c27ab18a71341a.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-base/8.4.0/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
+        revision="25.0.0"
         sha1="fef2b3e4b6b1b0e5fe7b69fa137a5fa55a3182ab">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-base-8.4.0_423b178336ca04475c646248b284c0a7c57ec6dc.jar" />
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\classes_2fa1c3178085f4f18c40e7cfa63c1cdc358837dc.jar" />
     </item>
     <item
         is-multidex="false"
-        jar="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/exploded-aar/com.google.android.gms/play-services-basement/8.4.0/jars/classes.jar"
+        jar="C:\Users\Alex\.android\build-cache\3ffde8098fcd22667e14175601eff55a375ff1ae\output\jars\classes.jar"
         jumboMode="false"
         optimize="true"
-        revision="23.0.2"
-        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/com.google.android.gms-play-services-basement-8.4.0_8900530f930fcd184a3f2a07bd3cfe4f56d8f026.jar" />
-    </item>
-    <item
-        is-multidex="false"
-        jar="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/exploded-aar/com.android.support/support-v4/23.0.1/jars/classes.jar"
-        jumboMode="false"
-        optimize="true"
-        revision="23.0.2"
+        revision="25.0.0"
         sha1="c31e21b53ff2f74664e498248d01453a32e32d48">
-        <dex dex="/Users/alexanderdubrovin/AndroidStudioProjects/SensorTest/app/build/intermediates/pre-dexed/debug/com.android.support-support-v4-23.0.1_e483327bed121392bd76d0a442937146a657f66e.jar" />
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\classes_6b628b7fc66c97144be60c497980a0ffff6769ce.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Alex\.android\build-cache\c609dbe16f132c32c1c3afe5714222b064d69d38\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e167a34eaca0b31704212f43f9576ea84e05046f">
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\classes_788b920bc8a736f6ffff30cf3794852fde15802e.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Alex\Documents\CompleteSensorTest\app\libs\achartengine-1.2.0.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="44c4ea00fc579ec8318af7b17a2e7eea54a3dbde">
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\achartengine-1.2.0_e8baf5aa168f3082c02670f7c472087c7da10eae.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Alex\.android\build-cache\e63aa23426673fab68874b4c6fe525940e96621b\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="58b928ccbaf9090c632f278d6bd31e1ae42f2457">
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\classes_91a2bd55f32e3aeb711d226718e73ba75a96e8e7.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Alex\.android\build-cache\3ffde8098fcd22667e14175601eff55a375ff1ae\output\jars\libs\internal_impl-23.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="aa92916125166649d8ad4ba3940c3dd7515596d3">
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\internal_impl-23.0.1_3966995bc23a2a997f25b50a51150e868d774556.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Alex\AppData\Local\Android\sdk\extras\android\m2repository\com\android\support\support-annotations\23.0.1\support-annotations-23.0.1.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="1fce89a6428c51467090d7f424e4c9c3dbd55f7e">
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\support-annotations-23.0.1_e3dd40df268ed73447c1093e6d21901f346f10d6.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Alex\.android\build-cache\3b662f1359040e31e094c340295bbbd84f7a606a\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="e5c58cbbcedcfa2d5c0ed5c050ca8bfadeb63f18">
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\classes_aa587a107e04cd517e34b97473dcfb72020d95a5.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Alex\.android\build-cache\6fb14ebf97f0ca1f342f3578cc06519923afa945\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="8e673cdfadd8f2d98fdb2fda2285c30f6e449782">
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\classes_5a755cafa75c33ad74f39e652ee3115a3d7ee897.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Alex\.android\build-cache\264b974ba595f0c69e1d1e7ece2fae39a743f095\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="c6d79137693d494dee16372d3921f919eb724ced">
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\classes_4469096d870ecaf472f055414de39c7abd5a0e16.jar" />
+    </item>
+    <item
+        is-multidex="false"
+        jar="C:\Users\Alex\.android\build-cache\b506230273ff58edcbeee2f00084a7e857ce0df9\output\jars\classes.jar"
+        jumboMode="false"
+        optimize="true"
+        revision="25.0.0"
+        sha1="d86429b0f0b3f3cafbeb78dda1b9d89119ccb05d">
+        <dex dex="C:\Users\Alex\Documents\CompleteSensorTest\app\build\intermediates\pre-dexed\debug\classes_9e5d8fbbf3352d50c5c97813736369963bd4b899.jar" />
     </item>
 
 </items>
