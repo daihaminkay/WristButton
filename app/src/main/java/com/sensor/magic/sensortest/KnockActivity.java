@@ -1,20 +1,28 @@
 package com.sensor.magic.sensortest;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.speech.tts.TextToSpeech;
 import android.support.wearable.activity.WearableActivity;
 import android.support.wearable.view.BoxInsetLayout;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import java.io.File;
 import java.io.FileReader;
+import java.io.IOException;
+import java.io.PrintStream;
 import java.util.ArrayList;
+import java.util.Locale;
 import java.util.Queue;
+import java.util.Random;
 import java.util.concurrent.LinkedBlockingQueue;
 
 import weka.classifiers.Classifier;
@@ -35,10 +43,10 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
     private boolean recognised;
     private boolean gyro = false;
     private AccelData pendingRotation = null;
-    private Classifier classifier;
-    private ArrayList<Attribute> attrs;
-    private Instances train;
-    private Instances inst;
+    private PrintStream ps;
+    private final int TRIALS = 10;
+    private int trial = 0;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,24 +60,15 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
         mAccel = mSensorManager.getDefaultSensor(Sensor.TYPE_LINEAR_ACCELERATION);
         mGyro = mSensorManager.getDefaultSensor(Sensor.TYPE_GAME_ROTATION_VECTOR);
 
-
-        classifier = new SMOreg(); // new LinearRegression(); //new ClassificationViaRegression();
-        attrs = new ArrayList<>();
-        attrs.add(new Attribute("prevX"));
-        attrs.add(new Attribute("prevY"));
-        attrs.add(new Attribute("prevZ"));
-        attrs.add(new Attribute("X"));
-        attrs.add(new Attribute("Y"));
-        attrs.add(new Attribute("Z"));
-        //attrs.add(new Attribute("Gesture"));
+        File f = new File(getApplicationContext().getExternalFilesDir(null), "knockTestFile.csv");
         try {
-            train = new Instances(new FileReader(this.getApplicationContext().getFilesDir().getPath() + "knock_game_data.txt"));
-            train.setClassIndex(train.numAttributes() - 1);
-            classifier.buildClassifier(train);
-        } catch (Exception e) {
+            if(!f.exists()){
+                f.createNewFile();
+            }
+            ps = new PrintStream(f);
+        } catch (IOException e) {
             e.printStackTrace();
         }
-        inst = new Instances("XYZ", attrs, 1000);
     }
 
     @Override
@@ -88,6 +87,13 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
     }
 
     @Override
+    protected void onStop() {
+        System.out.println("onstop");
+        ps.close();
+        super.onStop();
+    }
+
+    @Override
     protected void onResume() {
         super.onResume();
         mSensorManager.registerListener(this, mAccel, SensorManager.SENSOR_DELAY_FASTEST);
@@ -99,32 +105,6 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
     protected void onPause() {
         super.onPause();
         mSensorManager.unregisterListener(this);
-    }
-
-    private String queueToString(Queue<String> q) {
-        StringBuilder sb = new StringBuilder();
-        for (String s : q) {
-            sb.append(s);
-            sb.append("\n");
-        }
-        return sb.toString();
-    }
-
-    private boolean within(double toCheck, double threshold, double margin) {
-        return within(toCheck, threshold, Sign.ANY, margin);
-    }
-
-    private boolean within(double toCheck, double threshold, Sign sign, double margin) {
-        switch (sign) {
-            case POSITIVE:
-                return toCheck > 0 && Math.abs(Math.abs(toCheck) - Math.abs(threshold)) <= margin;
-            case NEGATIVE:
-                return toCheck < 0 && Math.abs(Math.abs(toCheck) - Math.abs(threshold)) <= margin;
-            case ANY:
-                return Math.abs(Math.abs(toCheck) - Math.abs(threshold)) <= margin;
-            default:
-                return false;
-        }
     }
 
     private boolean interval(double less, double val, double more) {
@@ -171,7 +151,7 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
                                 mTextView.setText("LEFT CHEST ");
                                 mTextView.setBackgroundColor(Color.MAGENTA);
                             } else {
-                                mTextView.setText("KNOCK\n" + pendingRotation.toString());
+                                mTextView.setText("KNOCK");
                             }
                         } else if (interval(60, pendingRotation.getZ(), 120)) {
                             if (interval(46, pendingRotation.getY(), 60)) {
@@ -181,15 +161,22 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
                                 mTextView.setText("RIGHT CHEST");
                                 mTextView.setBackgroundColor(Color.CYAN);
                             } else {
-                                mTextView.setText("KNOCK\n" + pendingRotation.toString());
+                                mTextView.setText("KNOCK");
                             }
                         } else {
-                            mTextView.setText("KNOCK\n" + pendingRotation.toString());
+                            mTextView.setText("KNOCK");
                             mTextView.setBackgroundColor(Color.YELLOW);
                         }
 
                     } else {
                         mTextView.setText("KNOCK");
+                    }
+                    ps.print(mTextView.getText());
+                    if(++trial != TRIALS) {
+                        ps.print(",");
+                    } else {
+                        ps.println();
+                        this.finish();
                     }
                     recognised = true;
                     //                try {
@@ -200,6 +187,7 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
                 } else if (!recognised && absZ > 5) {
                     log.add(String.valueOf(absZ));
                     mTextView.setText("SHAKE");
+
                     mTextView.setBackgroundColor(Color.WHITE);
                     //                try {
                     //                    mRawView.setText(String.valueOf(classifier.classifyInstance(di)));
@@ -237,6 +225,18 @@ public class KnockActivity extends WearableActivity implements SensorEventListen
 
     }
 
+    private enum Choice {
+        LEFT("LEFT"), KNOCK("KNOCK"), RIGHT("RIGHT");
 
-    private enum Sign {POSITIVE, NEGATIVE, ANY}
+        private String name;
+
+        Choice(String name){
+            this.name = name;
+        }
+
+        @Override
+        public String toString(){
+            return name;
+        }
+    }
 }

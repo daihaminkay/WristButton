@@ -11,7 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textSize="20pt"
+        android:textSize="16pt"
+        android:textColor="@color/white"
         android:text="LOL"
         android:layout_weight="1"
         />
@@ -21,7 +22,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textSize="20pt"
+        android:textSize="16pt"
+        android:textColor="@color/white"
         android:text="SAS"
         android:layout_weight="1"
         />

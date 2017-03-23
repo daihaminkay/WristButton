@@ -10,4 +10,6 @@
     <string name="title_activity_view_raw">ViewRawActivity</string>
     <string name="title_activity_mic">MicActivity</string>
     <string name="title_activity_mode">ModeActivity</string>
+    <string name="title_activity_ambidex">ModeActivity</string>
+    <string name="title_activity_fake_volume">FakeVolumeActivity</string>
 </resources>

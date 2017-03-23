@@ -2,11 +2,11 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/container_mode"
+    android:id="@+id/container_ambidex"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.sensor.magic.sensortest.ModeActivity"
+    tools:context="com.sensor.magic.sensortest.AmbidexActivity"
     tools:deviceIds="wear"
     >
 
@@ -14,7 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:layout_weight="3">
+        android:layout_weight="2">
         <!--Button
             android:id="@+id/start"
             android:layout_width="match_parent"
@@ -24,27 +24,19 @@
             android:layout_weight="1"/-->
 
         <Button
-            android:id="@+id/raise"
+            android:id="@+id/lefty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Raise mode"
-            android:onClick="checkRaise"
+            android:text="LEFTY"
+            android:onClick="checkLefty"
             android:layout_weight="1"/>
 
         <Button
-            android:id="@+id/rotate"
+            android:id="@+id/righty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rotate mode"
-            android:onClick="checkRotate"
-            android:layout_weight="1"/>
-
-        <Button
-            android:id="@+id/fake_volume"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Fake Volume"
-            android:onClick="checkConventional"
+            android:text="Righty"
+            android:onClick="checkRighty"
             android:layout_weight="1"/>
     </LinearLayout>
 

@@ -167,11 +167,15 @@ public class CSampler {
             if(density > toSee){
                 if(rising) {
                     //Peak
-                    if (toSee > 15 && toSee < 30 && !beforePeak) {
+                    if (density > 15 && density < 30 && !beforePeak) {
                         toSee = density;
                         block++;
                         sb.append(" ??? "+density+" ??? ");
-                        rising = false;
+                        //rising = false;
+                        scratch = true;
+                        block = 0;
+                        rising = true;
+                        toSee = 1;
                     } else {
                         toSee = density;
                         block++;

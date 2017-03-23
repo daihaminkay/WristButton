@@ -23,22 +23,6 @@
         android:onClick="startTraining"
         android:layout_weight="1"/-->
 
-    <Button
-        android:id="@+id/view"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View train data"
-        android:onClick="viewTraining"
-        android:layout_weight="1"/>
-
-    <Button
-        android:id="@+id/view_raw"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="View RAW train data"
-        android:onClick="viewRawTraining"
-        android:layout_weight="1"/>
-
     <!--Button
         android:id="@+id/test"
         android:layout_width="match_parent"
@@ -48,35 +32,25 @@
         android:layout_weight="1"/-->
 
     <Button
-        android:id="@+id/knock_training"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Start Knock Training"
-        android:onClick="startKnockTraining"
-        android:layout_weight="1"/>
-
-    <Button
         android:id="@+id/knock_game"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Start Knock Game"
+        android:text="BodyKnock"
         android:onClick="startKnockGame"
         android:layout_weight="1"/>
-
+    <Button
+        android:id="@+id/audio_test"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="WristButton"
+        android:onClick="startAudio"
+        android:layout_weight="1"/>
     <Button
         android:id="@+id/data_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="View Raw Updates"
         android:onClick="viewAllUpdates"
-        android:layout_weight="1"/>
-
-    <Button
-        android:id="@+id/audio_test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Audio Test"
-        android:onClick="startAudio"
         android:layout_weight="1"/>
 </LinearLayout>
 

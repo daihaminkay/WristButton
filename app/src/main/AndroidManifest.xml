@@ -8,6 +8,8 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.VIBRATE"/>
+
 
     <application
         android:allowBackup="true"
@@ -64,7 +66,15 @@
         <activity
             android:name=".ModeActivity"
             android:label="@string/title_activity_mode"
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
+        <activity
+            android:name=".FakeVolumeActivity"
+            android:label="@string/title_activity_fake_volume"
             android:theme="@android:style/Theme.DeviceDefault.Light"></activity>
+        <activity
+            android:name=".AmbidexActivity"
+            android:label="@string/title_activity_ambidex"
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
     </application>
 
 </manifest>
