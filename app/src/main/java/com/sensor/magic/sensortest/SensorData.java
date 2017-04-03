@@ -1,9 +1,9 @@
 package com.sensor.magic.sensortest;
 
-/**
- * Created by alexanderdubrovin on 25/10/2016.
- */
 
+/**
+ * Helper class to contain sensor data
+ */
 public class SensorData {
     private final boolean divider;
     private long timestamp;

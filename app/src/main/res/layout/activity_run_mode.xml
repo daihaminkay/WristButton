@@ -6,43 +6,27 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.sensor.magic.sensortest.TrainActivity"
+    tools:context="com.sensor.magic.sensortest.RunModeActivity"
     tools:deviceIds="wear"
     >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="2">
-        <!--Button
-            android:id="@+id/start"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start training"
-            android:onClick="startTraining"
-            android:layout_weight="1"/-->
-
-        <!--Button
-            android:id="@+id/test"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start testing"
-            android:onClick="startTesting"
-            android:layout_weight="1"/-->
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/mode_test"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TEST"
+            android:text="@string/test_runmode"
             android:onClick="startTest"
             android:layout_weight="1"/>
         <Button
             android:id="@+id/mode_study"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="TRIAL"
+            android:text="@string/trial_runmode"
             android:onClick="startTrial"
             android:layout_weight="1"/>
     </LinearLayout>

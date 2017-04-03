@@ -13,29 +13,21 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="3">
-        <!--Button
-            android:id="@+id/start"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start training"
-            android:onClick="startTraining"
-            android:layout_weight="1"/-->
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/raise"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Raise mode"
-            android:onClick="checkRaise"
+            android:text="@string/motion_mode"
+            android:onClick="checkMotion"
             android:layout_weight="1"/>
 
         <Button
             android:id="@+id/rotate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Rotate mode"
+            android:text="@string/rotate_mode"
             android:onClick="checkRotate"
             android:layout_weight="1"/>
 
@@ -43,10 +35,8 @@
             android:id="@+id/fake_volume"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Fake Volume"
+            android:text="@string/conventional"
             android:onClick="checkConventional"
             android:layout_weight="1"/>
     </LinearLayout>
-
-
 </ScrollView>

@@ -16,18 +16,30 @@ public class SensorActivity extends WearableActivity {
         setContentView(R.layout.activity_sensor);
     }
 
-    public void startKnockGame(View view) {
+    /**
+     * Trigger BodyKnock
+     * @param view caller
+     */
+    public void startBodyKnock(View view) {
         Intent intent = new Intent(this, RunModeActivity.class);
         intent.putExtra("ACTION", "KNOCK");
         startActivity(intent);
     }
 
+    /**
+     * View raw sensor data - for debugging
+     * @param view caller
+     */
     public void viewAllUpdates(View view) {
         Intent intent = new Intent(this, ViewRawActivity.class);
         startActivity(intent);
     }
 
-    public void startAudio(View view) {
+    /**
+     * Trigger WristButton
+     * @param view caller
+     */
+    public void startWristButton(View view) {
         Intent intent = new Intent(this, ModeActivity.class);
         startActivity(intent);
     }

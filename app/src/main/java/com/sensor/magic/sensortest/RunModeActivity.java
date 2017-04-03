@@ -1,6 +1,5 @@
 package com.sensor.magic.sensortest;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.wearable.activity.WearableActivity;
@@ -23,6 +22,10 @@ public class RunModeActivity extends WearableActivity {
         }
     }
 
+    /**
+     * Trigger interaction in test mode - no stats collected
+     * @param view caller
+     */
     public void startTest(View view){
         Intent intent;
         if(knock.equals("KNOCK")){
@@ -38,6 +41,10 @@ public class RunModeActivity extends WearableActivity {
         startActivity(intent);
     }
 
+    /**
+     * Trigger interaction in trial mode - stats are collected
+     * @param view caller
+     */
     public void startTrial(View view){
         Intent intent;
         if(knock.equals("KNOCK")){

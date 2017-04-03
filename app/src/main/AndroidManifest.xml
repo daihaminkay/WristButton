@@ -31,22 +31,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".TrainActivity"
-            android:label="@string/title_activity_train"
-            android:theme="@android:style/Theme.DeviceDefault.Light" />
-        <activity
-            android:name=".TrainLogActivity"
-            android:label="@string/title_activity_train_log"
-            android:theme="@android:style/Theme.DeviceDefault.Light" />
-        <activity
-            android:name=".TestActivity"
-            android:label="@string/title_activity_test"
-            android:theme="@android:style/Theme.DeviceDefault.Light" />
-        <activity
-            android:name=".TrainRawLogActivity"
-            android:label="@string/title_activity_train_raw_log"
-            android:theme="@android:style/Theme.DeviceDefault.Light" />
-        <activity
             android:name=".KnockActivity"
             android:label="@string/title_activity_knock"
             android:theme="@android:style/Theme.DeviceDefault.Light" />

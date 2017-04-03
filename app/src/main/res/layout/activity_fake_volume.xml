@@ -12,9 +12,8 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:layout_weight="4">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
         <TextView
             android:layout_width="match_parent"
             android:layout_height="30pt"
@@ -40,7 +39,7 @@
                 android:id="@+id/raise"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="UP"
+                android:text="@string/up"
                 android:onClick="raiseVolume"
 
                 android:layout_weight="1"/>
@@ -49,7 +48,7 @@
                 android:id="@+id/rotate"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="DOWN"
+                android:text="@string/down"
                 android:onClick="lowerVolume"
                 android:layout_weight="1"/>
         </LinearLayout>

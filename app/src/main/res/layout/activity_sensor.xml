@@ -6,50 +6,34 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.sensor.magic.sensortest.TrainActivity"
+    tools:context="com.sensor.magic.sensortest.SensorActivity"
     tools:deviceIds="wear"
     >
 
 <LinearLayout
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:layout_weight="4">
-    <!--Button
-        android:id="@+id/start"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Start training"
-        android:onClick="startTraining"
-        android:layout_weight="1"/-->
-
-    <!--Button
-        android:id="@+id/test"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Start testing"
-        android:onClick="startTesting"
-        android:layout_weight="1"/-->
+    android:orientation="vertical">
 
     <Button
         android:id="@+id/knock_game"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="BodyKnock"
-        android:onClick="startKnockGame"
+        android:text="@string/bodyknock"
+        android:onClick="startBodyKnock"
         android:layout_weight="1"/>
     <Button
         android:id="@+id/audio_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="WristButton"
-        android:onClick="startAudio"
+        android:text="@string/wristbutton"
+        android:onClick="startWristButton"
         android:layout_weight="1"/>
     <Button
         android:id="@+id/data_test"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="View Raw Updates"
+        android:text="@string/raw_data"
         android:onClick="viewAllUpdates"
         android:layout_weight="1"/>
 </LinearLayout>

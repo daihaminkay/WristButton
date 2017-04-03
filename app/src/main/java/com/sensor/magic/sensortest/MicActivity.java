@@ -167,7 +167,7 @@ public class MicActivity extends Activity implements SensorEventListener {
     }
 
     /**
-     * Called by OnCreate to get everything up and running
+     * Called by onCreate to get everything up and running
      */
     public void run() {
         try {
@@ -181,9 +181,7 @@ public class MicActivity extends Activity implements SensorEventListener {
             e.printStackTrace();
         }
     }
-
-    // TODO: 03/02/2017 use this to live log the density data to see what is up. 
-
+    
     boolean tilt = false;
     int threshold = 0;
 
@@ -206,13 +204,17 @@ public class MicActivity extends Activity implements SensorEventListener {
 
         Sensor sens = event.sensor;
 
+        //This option is triggered when the Motion mode is enabled 
+        //is concerned with processing acceleration data
         if(sens.getType() == Sensor.TYPE_LINEAR_ACCELERATION ){
             accelVal = Math.abs(z) > Math.abs(accelVal) ? z: accelVal;
             if(tilted && useAccel) {
                 double absX = Math.abs(x);
                 double absY = Math.abs(y);
                 double absZ = Math.abs(z);
+                //check for significant motion
                 if (absX > 4 || absY > 4 || absZ > 4) {
+                    //checks for the prevalence of motion in any direction
                     if (absX > absY && absX > absZ) {
                         if (x > 4) {
                             current = lefty ? Direction.BACKWARD : Direction.FORWARD;
@@ -242,7 +244,7 @@ public class MicActivity extends Activity implements SensorEventListener {
                     }
                     tv2.setText(current.toString());
                 } else {
-                    Log.e("DATA", threshold + " : " + targetDir.get(index).toString() + " : " + (current == null ? "null" : current.toString()));
+                    //insignificant motion triggers timer - once reached, the gesture is confirmed
                     if (++threshold == 200) {
                         tv2.setText(current != null ? current.toString() : "null");
                         boolean currentMatch = targetDir.get(index).equals(current);
@@ -266,8 +268,8 @@ public class MicActivity extends Activity implements SensorEventListener {
                                 tv.setText(targetDir.get(index).toString());
                             }
                             if (index == targetDir.size()) {
-                                tv.setText("NOPE");
-                                tv2.setText("NOPE");
+                                tv.setText(R.string.idle);
+                                tv2.setText(R.string.idle);
                                 tv.setBackgroundColor(Color.GREEN);
                                 tv2.setBackgroundColor(Color.GREEN);
                                 if(!test) {
@@ -288,8 +290,8 @@ public class MicActivity extends Activity implements SensorEventListener {
                                 tv.setText(targetDir.get(index).toString());
                             }
                             if (index == targetDir.size()) {
-                                tv.setText("NOPE");
-                                tv2.setText("NOPE");
+                                tv.setText(R.string.idle);
+                                tv2.setText(R.string.idle);
                                 tv.setBackgroundColor(Color.RED);
                                 tv2.setBackgroundColor(Color.RED);
                                 if(!test) {
@@ -308,6 +310,8 @@ public class MicActivity extends Activity implements SensorEventListener {
                     }
                 }
             }
+            // This part is responsible for WristButton detection - once triggered, disables and
+            // awaits for completion of either motion or rotation modes
         } else if(sens.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR && !tilted) {
             float[] rotMat = new float[9];
             float[] vals = new float[3];
@@ -318,34 +322,35 @@ public class MicActivity extends Activity implements SensorEventListener {
                         SensorManager.AXIS_X, SensorManager.AXIS_Z, vals);
                 SensorManager.getOrientation(rotMat, vals);
 
-                // Optionally convert the result from radians to degrees
+                // Converting the result from radians to degrees
                 vals[0] = (float) Math.toDegrees(vals[0]);
                 vals[1] = (float) Math.toDegrees(vals[1]);
                 vals[2] = (float) Math.toDegrees(vals[2]);
                 final SensorData dat = new SensorData(timestamp, vals[0], vals[1], vals[2]);
                 sensorData.add(dat);
+                //if sound flag is triggered
                 if (sampler.getScratch()) {
-                    tv2.setText("SOUND");
+                    tv2.setText(R.string.sound_flag);
                     tv2.setBackgroundColor(Color.MAGENTA);
                 }
                 if (sensorData.size() > 10) {
                     SensorData prev = sensorData.get(sensorData.size() - 10);
-                    //Attempt to eliminate non-knock movements
-                    double absZ = lefty ? -(vals[2] - prev.getZ()) : vals[2] - prev.getZ();
-                    //tv.setText("LOL: " + Math.round(absZ));
+                    // Attempt to eliminate non-knock movements
+                    double absZ = lefty ? - (vals[2] - prev.getZ()) : vals[2] - prev.getZ();
+                    // recognising wrist tilt
                     if (!tilt && absZ > 20 && absZ < 30) {
-                        tv.setText("TILT");
+                        tv.setText(R.string.tilt_flag);
                         if (Math.abs(accelVal) <= 5) {
                             tilt = true;
                         } else {
                             accelVal = 0;
                         }
+                    // if dual flag is enabled, trigger WristButton
                     } else if (tilt && sampler.getScratch()) {
-                        Log.d("CCCCCC", "GOT THIRD: " + getApplicationContext().getExternalFilesDir(null).getAbsolutePath());
                         timer = System.currentTimeMillis();
-                        tv.setText("TOUCH");
+                        tv.setText(R.string.dual_flag);
                         tv.setBackgroundColor(Color.BLUE);
-                        tv2.setText("TOUCH");
+                        tv2.setText(R.string.dual_flag);
                         tv2.setBackgroundColor(Color.BLUE);
                         tilt = false;
                         tilted = true;
@@ -360,30 +365,33 @@ public class MicActivity extends Activity implements SensorEventListener {
                             target = getRandom();
                             tv.setText(String.valueOf(target));
                         }
+                    // if dual flag wasn't received in a short interval, disable singular flag
                     } else if (tilt && absZ > 5 && ++threshold > 20) {
-                        tv.setText("NOPE");
+                        tv.setText(R.string.idle);
                         tv.setBackgroundColor(Color.RED);
                         if (!sampler.getScratch()) {
-                            tv2.setText("NOPE");
+                            tv2.setText(R.string.idle);
                             tv2.setBackgroundColor(Color.RED);
                             tilt = false;
                         }
                     } else if (!tilt && absZ < 5 && ++threshold > 20){
-                        tv.setText("NOPE");
+                        tv.setText(R.string.idle);
                         tv.setBackgroundColor(Color.RED);
                         if(sampler.getScratch()){
                             sampler.toggleScratch();
-                            tv2.setText("NOPE");
+                            tv2.setText(R.string.idle);
                             tv2.setBackgroundColor(Color.RED);
                             threshold = 0;
                         }
                     }
                 }
 
+                //maintaining fixed buffer size
                 if (sensorData.size() > 15) {
                     sensorData.remove(0);
                 }
             }
+        // managing rotation mode after WristButton triggering
         } else if (sens.getType() == Sensor.TYPE_GAME_ROTATION_VECTOR && tilted && !useAccel){
             float[] rotMat = new float[9];
             float[] vals = new float[3];
@@ -394,7 +402,7 @@ public class MicActivity extends Activity implements SensorEventListener {
                         SensorManager.AXIS_X, SensorManager.AXIS_Z, vals);
                 SensorManager.getOrientation(rotMat, vals);
 
-                // Optionally convert the result from radians to degrees
+                // Convert the result from radians to degrees
                 vals[0] = (float) Math.toDegrees(vals[0]);
                 vals[1] = (float) Math.toDegrees(vals[1]);
                 vals[2] = (float) Math.toDegrees(vals[2]);
@@ -403,12 +411,8 @@ public class MicActivity extends Activity implements SensorEventListener {
                 if(sensorData.size() > 3) {
                     SensorData prev = sensorData.get(sensorData.size() - 3);
                     double absY = Math.abs(vals[1] - prev.getY());
-                    //if(absY > 3){
-                    Log.e("HAHAHA", fixY + " : "+vals[1]);
                     int current = (int) (fixY - (int)vals[1])/3;
-                        tv2.setText(String.valueOf(current));
-                    //}
-
+                    tv2.setText(String.valueOf(current));
 
                     if(absY < 1){
                         if(++threshold > 100){
@@ -450,6 +454,10 @@ public class MicActivity extends Activity implements SensorEventListener {
         }
     }
 
+    /**
+     * Generate random number within a limit
+     * @return random integer
+     */
     private int getRandom(){
         int base = rand.nextInt(10);
         boolean sign = rand.nextBoolean();
@@ -458,6 +466,10 @@ public class MicActivity extends Activity implements SensorEventListener {
         return base;
     }
 
+    /**
+     * Generate random list of directions
+     * @return an ArrayList of directions
+     */
     private ArrayList<Direction> getRandomDirs(){
         ArrayList<Direction> output = new ArrayList<>();
         for(int i = 0; i < 6; i++){

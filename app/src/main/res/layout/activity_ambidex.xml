@@ -13,21 +13,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_weight="2">
-        <!--Button
-            android:id="@+id/start"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Start training"
-            android:onClick="startTraining"
-            android:layout_weight="1"/-->
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/lefty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="LEFTY"
+            android:text="@string/lefty"
             android:onClick="checkLefty"
             android:layout_weight="1"/>
 
@@ -35,7 +27,7 @@
             android:id="@+id/righty"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Righty"
+            android:text="@string/righty"
             android:onClick="checkRighty"
             android:layout_weight="1"/>
     </LinearLayout>
