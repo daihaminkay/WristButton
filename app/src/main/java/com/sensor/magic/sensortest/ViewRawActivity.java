@@ -35,13 +35,13 @@ public class ViewRawActivity extends WearableActivity implements SensorEventList
     private SensorManager mSensorManager;
     private Sensor mLight;
     private Sensor mGyro;
-    private ArrayList<AccelData> sensorData = new ArrayList<>();
-    private ArrayList<AccelData> fullSensorData = new ArrayList<>();
+    private ArrayList<SensorData> sensorData = new ArrayList<>();
+    private ArrayList<SensorData> fullSensorData = new ArrayList<>();
     private BoxInsetLayout layout;
     private TextView raw;
     private View mChart;
 
-    static String anythingToString(ArrayList<AccelData> q) {
+    static String anythingToString(ArrayList<SensorData> q) {
         StringBuilder sb = new StringBuilder();
         for (int i = q.size() - 1; i >= 0; i--) {
             sb.append(q.get(i).toString());
@@ -135,7 +135,7 @@ public class ViewRawActivity extends WearableActivity implements SensorEventList
 //            XYSeries aSeries = new XYSeries("A");
 
             for (int i = 0; i < sensorData.size(); i++) {
-                AccelData data = sensorData.get(i);
+                SensorData data = sensorData.get(i);
                 xSeries.add(data.getTimestamp() - t, data.getX());
                 ySeries.add(data.getTimestamp() - t, data.getY());
                 zSeries.add(data.getTimestamp() - t, data.getZ());
@@ -223,7 +223,7 @@ public class ViewRawActivity extends WearableActivity implements SensorEventList
             float y = event.values[1];
             float z = event.values[2];
             long timestamp = System.currentTimeMillis();
-            final AccelData dat = new AccelData(timestamp, x, y, z);
+            final SensorData dat = new SensorData(timestamp, x, y, z);
             sensorData.add(dat);
 
             if ((Math.abs(x) > 2 || Math.abs(y) > 2 || Math.abs(z) > 2) && !fix) {
@@ -266,7 +266,7 @@ public class ViewRawActivity extends WearableActivity implements SensorEventList
                 vals[0] = (float) Math.toDegrees(vals[0]);
                 vals[1] = (float) Math.toDegrees(vals[1]);
                 vals[2] = (float) Math.toDegrees(vals[2]);
-                final AccelData dat = new AccelData(timestamp, vals[0], vals[1], vals[2]);
+                final SensorData dat = new SensorData(timestamp, vals[0], vals[1], vals[2]);
                 sensorData.add(dat);
                 raw = (TextView) findViewById(R.id.raw);
                 raw.setText(anythingToString(sensorData));

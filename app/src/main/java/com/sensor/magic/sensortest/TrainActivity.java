@@ -37,8 +37,8 @@ public class TrainActivity extends WearableActivity implements SensorEventListen
     int count = 0;
     private SensorManager mSensorManager;
     private Sensor mLight;
-    private ArrayList<AccelData> sensorData = new ArrayList<>();
-    private ArrayList<AccelData> fullSensorData = new ArrayList<>();
+    private ArrayList<SensorData> sensorData = new ArrayList<>();
+    private ArrayList<SensorData> fullSensorData = new ArrayList<>();
     private View mChart;
     private TextView info;
     private LinearLayout layout;
@@ -80,7 +80,7 @@ public class TrainActivity extends WearableActivity implements SensorEventListen
         float y = event.values[1];
         float z = event.values[2];
         long timestamp = System.currentTimeMillis();
-        final AccelData dat = new AccelData(timestamp, x, y, z);
+        final SensorData dat = new SensorData(timestamp, x, y, z);
         sensorData.add(dat);
         fullSensorData.add(dat);
         if (sensorData.size() > 1) {
@@ -138,7 +138,7 @@ public class TrainActivity extends WearableActivity implements SensorEventListen
 //            XYSeries aSeries = new XYSeries("A");
 
             for (int i = 0; i < sensorData.size(); i++) {
-                AccelData data = sensorData.get(i);
+                SensorData data = sensorData.get(i);
                 xSeries.add(data.getTimestamp() - t, data.getX());
                 ySeries.add(data.getTimestamp() - t, data.getY());
                 zSeries.add(data.getTimestamp() - t, data.getZ());
@@ -237,7 +237,7 @@ public class TrainActivity extends WearableActivity implements SensorEventListen
                 f.createNewFile();
             }
             fw_raw = new FileWriter(f_raw);
-            for (AccelData ad : fullSensorData)
+            for (SensorData ad : fullSensorData)
                 fw_raw.write(ad.toString() + "\n");
             fw_raw.flush();
 

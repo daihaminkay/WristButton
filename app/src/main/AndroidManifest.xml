@@ -8,8 +8,7 @@
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.VIBRATE"/>
-
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -52,10 +51,6 @@
             android:label="@string/title_activity_knock"
             android:theme="@android:style/Theme.DeviceDefault.Light" />
         <activity
-            android:name=".KnockLearnActivity"
-            android:label="@string/title_activity_knock_learn"
-            android:theme="@android:style/Theme.DeviceDefault.Light" />
-        <activity
             android:name=".ViewRawActivity"
             android:label="@string/title_activity_view_raw"
             android:theme="@android:style/Theme.DeviceDefault.Light" />
@@ -70,11 +65,15 @@
         <activity
             android:name=".FakeVolumeActivity"
             android:label="@string/title_activity_fake_volume"
-            android:theme="@android:style/Theme.DeviceDefault.Light"></activity>
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
         <activity
             android:name=".AmbidexActivity"
             android:label="@string/title_activity_ambidex"
             android:theme="@android:style/Theme.DeviceDefault.Light" />
+        <activity
+            android:name=".RunModeActivity"
+            android:theme="@android:style/Theme.DeviceDefault.Light" />
+
     </application>
 
 </manifest>

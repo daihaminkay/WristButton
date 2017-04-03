@@ -8,29 +8,20 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Vibrator;
 import android.util.Log;
-import android.view.Display;
-import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.List;
 import java.util.Random;
-import java.util.StringTokenizer;
 
 public class MicActivity extends Activity implements SensorEventListener {
 
-    private ArrayList<AccelData> sensorData = new ArrayList<>();
-    private CSampler sampler;
+    private ArrayList<SensorData> sensorData = new ArrayList<>();
+    private MicrophoneListener sampler;
     private TextView tv;
     private TextView tv2;
 
@@ -42,9 +33,10 @@ public class MicActivity extends Activity implements SensorEventListener {
     private Sensor mAccel;
     private boolean useAccel;
     private boolean lefty;
+    private boolean test;
     private Vibrator v;
     private PrintStream ps;
-    private final int TRIALS = 10;
+    private int TRIALS = 10;
     private int trial = 0;
 
     private enum Direction {
@@ -87,8 +79,11 @@ public class MicActivity extends Activity implements SensorEventListener {
                     break;
             }
 
+            if(useAccel)
+                TRIALS = 5;
+
             String hand = extras.getString("HAND");
-            switch (mode) {
+            switch (hand) {
                 case "LEFTY":
                     lefty = true;
                     break;
@@ -96,72 +91,62 @@ public class MicActivity extends Activity implements SensorEventListener {
                     lefty = false;
                     break;
             }
-            //The key argument here must match that used in the other activity
+
+            test = extras.getBoolean("TEST");
         }
 
-        File f = new File(getApplicationContext().getExternalFilesDir(null), (useAccel ? "raiseTest" : "rotateTest")+"File.csv");
-        try {
-            if(!f.exists()){
-                f.createNewFile();
+        if(!test) {
+            File f = new File(getApplicationContext().getExternalFilesDir(null), (useAccel ? "raiseTest" : "rotateTest") + "File.csv");
+            try {
+                if (!f.exists()) {
+                    f.createNewFile();
+                }
+                ps = new PrintStream(f);
+            } catch (IOException e) {
+                e.printStackTrace();
             }
-            ps = new PrintStream(f);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
+
 
         while (true) {
             run();
-            System.out.println("mDrawThread NOT NULL");
-            System.out.println("recorder NOT NULL");
             return;
         }
     }
 
     /**
-     * Pause the visualizer when the app is paused
+     * Pause the audio thread when the app is paused
      */
     @Override
     protected void onPause() {
-        System.out.println("onpause");
-        sampler.SetRun(Boolean.valueOf(false));
-        sampler.SetSleeping(Boolean.valueOf(true));
+        sampler.setRun(Boolean.FALSE);
         super.onPause();
         mSensorManager.unregisterListener(this);
     }
 
     /**
-     * Resters the visualizer when the app restarts
+     * Restarts the audio thread when the app restarts
      */
     @Override
     protected void onRestart() {
-        System.out.println("onRestart");
         super.onRestart();
     }
 
     /**
-     * Resume the visualizer when the app resumes
+     * Resume the audio thread when the app resumes
      */
     @Override
     protected void onResume() {
         mSensorManager.registerListener(this, mGyro, SensorManager.SENSOR_DELAY_UI);
         mSensorManager.registerListener(this, mAccel, SensorManager.SENSOR_DELAY_UI);
-        System.out.println("onresume");
-        int i = 0;
         while (true) {
-            if ((sampler.GetDead2().booleanValue())) {
-                sampler.Restart();
-                sampler.SetSleeping(Boolean.valueOf(false));
+            if ((sampler.getDead())) {
+                sampler.restart();
                 super.onResume();
                 return;
             }
             try {
                 Thread.sleep(500L);
-                System.out.println("Hang on..");
-                i++;
-                if (!sampler.GetDead2().booleanValue())
-                    System.out.println("sampler not DEAD!!!");
-                if (i <= 4)
-                    continue;
             } catch (InterruptedException localInterruptedException) {
                 localInterruptedException.printStackTrace();
             }
@@ -171,23 +156,14 @@ public class MicActivity extends Activity implements SensorEventListener {
 
     @Override
     protected void onStart() {
-        System.out.println("onstart");
         super.onStart();
     }
 
     @Override
     protected void onStop() {
-        System.out.println("onstop");
-        ps.close();
+        if(!test)
+            ps.close();
         super.onStop();
-    }
-
-
-    /**
-     * Recives the buffert from the sampler
-     */
-    public void setBuffer(short[] paramArrayOfShort) {
-
     }
 
     /**
@@ -196,21 +172,11 @@ public class MicActivity extends Activity implements SensorEventListener {
     public void run() {
         try {
             if (sampler == null)
-                sampler = new CSampler(this);
-            Context localContext = getApplicationContext();
-            Display localDisplay = getWindowManager().getDefaultDisplay();
-            Toast localToast = Toast.makeText(localContext, "Please make some noise..", Toast.LENGTH_LONG);
-            localToast.setGravity(48, 0, localDisplay.getHeight() / 8);
-            localToast.show();
-            if (sampler != null) {
-                sampler.Init();
-                sampler.StartRecording();
-                sampler.StartSampling();
-            }
+                sampler = new MicrophoneListener();
 
-
-        } catch (NullPointerException e) {
-            Log.e("Main_Run", "NullPointer: " + e.getMessage());
+            sampler.init();
+            sampler.startRecording();
+            sampler.startSampling();
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -277,21 +243,23 @@ public class MicActivity extends Activity implements SensorEventListener {
                     tv2.setText(current.toString());
                 } else {
                     Log.e("DATA", threshold + " : " + targetDir.get(index).toString() + " : " + (current == null ? "null" : current.toString()));
-                    if (++threshold == 35) {
-                        tv2.setText(current.toString());
+                    if (++threshold == 200) {
+                        tv2.setText(current != null ? current.toString() : "null");
                         boolean currentMatch = targetDir.get(index).equals(current);
                         threshold = 0;
-                        ps.print(String.valueOf(System.currentTimeMillis() - timer));
-                        ps.print(", ");
-                        ps.print(String.valueOf(current.toString()));
-                        ps.print(", ");
-                        ps.print(String.valueOf(targetDir.get(index).toString()));
-                        ps.print(", ");
-                        ps.print(String.valueOf(currentMatch));
-                        ps.print(", ");
-                        ps.flush();
+                        if(!test) {
+                            ps.print(String.valueOf(System.currentTimeMillis() - timer));
+                            ps.print(", ");
+                            ps.print(String.valueOf(current == null ? "null" : current.toString()));
+                            ps.print(", ");
+                            ps.print(String.valueOf(targetDir.get(index).toString()));
+                            ps.print(", ");
+                            ps.print(String.valueOf(currentMatch));
+                            ps.print(", ");
+                            ps.flush();
+                        }
                         overall = overall && currentMatch;
-                        v.vibrate(500);
+                        v.vibrate(200);
                         if(currentMatch) {
                             tv.setBackgroundColor(Color.rgb(152, 251, 152));
                             if (++index != targetDir.size()) {
@@ -302,13 +270,15 @@ public class MicActivity extends Activity implements SensorEventListener {
                                 tv2.setText("NOPE");
                                 tv.setBackgroundColor(Color.GREEN);
                                 tv2.setBackgroundColor(Color.GREEN);
-                                ps.print(String.valueOf(overall));
-                                ps.println();
-                                ps.flush();
+                                if(!test) {
+                                    ps.print(String.valueOf(overall));
+                                    ps.println();
+                                    ps.flush();
+                                }
                                 tilted = false;
                                 index = 0;
                                 overall = true;
-                                if(++trial == TRIALS){
+                                if(++trial == TRIALS && !test){
                                     this.finish();
                                 }
                             }
@@ -322,13 +292,15 @@ public class MicActivity extends Activity implements SensorEventListener {
                                 tv2.setText("NOPE");
                                 tv.setBackgroundColor(Color.RED);
                                 tv2.setBackgroundColor(Color.RED);
-                                ps.print(String.valueOf(overall));
-                                ps.println();
-                                ps.flush();
+                                if(!test) {
+                                    ps.print(String.valueOf(overall));
+                                    ps.println();
+                                    ps.flush();
+                                }
                                 tilted = false;
                                 index = 0;
                                 overall = true;
-                                if(++trial == TRIALS){
+                                if(++trial == TRIALS && !test){
                                     this.finish();
                                 }
                             }
@@ -350,19 +322,19 @@ public class MicActivity extends Activity implements SensorEventListener {
                 vals[0] = (float) Math.toDegrees(vals[0]);
                 vals[1] = (float) Math.toDegrees(vals[1]);
                 vals[2] = (float) Math.toDegrees(vals[2]);
-                final AccelData dat = new AccelData(timestamp, vals[0], vals[1], vals[2]);
+                final SensorData dat = new SensorData(timestamp, vals[0], vals[1], vals[2]);
                 sensorData.add(dat);
                 if (sampler.getScratch()) {
                     tv2.setText("SOUND");
                     tv2.setBackgroundColor(Color.MAGENTA);
                 }
-                if (sensorData.size() > 5) {
-                    AccelData prev = sensorData.get(sensorData.size() - 6);
+                if (sensorData.size() > 10) {
+                    SensorData prev = sensorData.get(sensorData.size() - 10);
                     //Attempt to eliminate non-knock movements
-                    double absZ = vals[2] - prev.getZ();
+                    double absZ = lefty ? -(vals[2] - prev.getZ()) : vals[2] - prev.getZ();
                     //tv.setText("LOL: " + Math.round(absZ));
                     if (!tilt && absZ > 20 && absZ < 30) {
-                        Log.d("AAAAA", "GOT FIRST: " + accelVal);
+                        tv.setText("TILT");
                         if (Math.abs(accelVal) <= 5) {
                             tilt = true;
                         } else {
@@ -388,7 +360,7 @@ public class MicActivity extends Activity implements SensorEventListener {
                             target = getRandom();
                             tv.setText(String.valueOf(target));
                         }
-                    } else if (tilt && absZ > 5 && ++threshold > 10) {
+                    } else if (tilt && absZ > 5 && ++threshold > 20) {
                         tv.setText("NOPE");
                         tv.setBackgroundColor(Color.RED);
                         if (!sampler.getScratch()) {
@@ -396,7 +368,7 @@ public class MicActivity extends Activity implements SensorEventListener {
                             tv2.setBackgroundColor(Color.RED);
                             tilt = false;
                         }
-                    } else if (!tilt && absZ < 5 && ++threshold > 10){
+                    } else if (!tilt && absZ < 5 && ++threshold > 20){
                         tv.setText("NOPE");
                         tv.setBackgroundColor(Color.RED);
                         if(sampler.getScratch()){
@@ -408,7 +380,7 @@ public class MicActivity extends Activity implements SensorEventListener {
                     }
                 }
 
-                if (sensorData.size() > 5) {
+                if (sensorData.size() > 15) {
                     sensorData.remove(0);
                 }
             }
@@ -426,10 +398,10 @@ public class MicActivity extends Activity implements SensorEventListener {
                 vals[0] = (float) Math.toDegrees(vals[0]);
                 vals[1] = (float) Math.toDegrees(vals[1]);
                 vals[2] = (float) Math.toDegrees(vals[2]);
-                final AccelData dat = new AccelData(timestamp, vals[0], vals[1], vals[2]);
+                final SensorData dat = new SensorData(timestamp, vals[0], vals[1], vals[2]);
                 sensorData.add(dat);
                 if(sensorData.size() > 3) {
-                    AccelData prev = sensorData.get(sensorData.size() - 3);
+                    SensorData prev = sensorData.get(sensorData.size() - 3);
                     double absY = Math.abs(vals[1] - prev.getY());
                     //if(absY > 3){
                     Log.e("HAHAHA", fixY + " : "+vals[1]);
@@ -439,16 +411,18 @@ public class MicActivity extends Activity implements SensorEventListener {
 
 
                     if(absY < 1){
-                        if(++threshold > 30){
-                            ps.print(String.valueOf(System.currentTimeMillis() - timer));
-                            ps.print(", ");
-                            ps.print(String.valueOf(current == target));
-                            ps.print(", ");
-                            ps.print(String.valueOf(current));
-                            ps.print(", ");
-                            ps.print(String.valueOf(target));
-                            ps.println();
-                            ps.flush();
+                        if(++threshold > 100){
+                            if(!test) {
+                                ps.print(String.valueOf(System.currentTimeMillis() - timer));
+                                ps.print(", ");
+                                ps.print(String.valueOf(current == target));
+                                ps.print(", ");
+                                ps.print(String.valueOf(current));
+                                ps.print(", ");
+                                ps.print(String.valueOf(target));
+                                ps.println();
+                                ps.flush();
+                            }
                             if(current == target) {
                                 tv.setBackgroundColor(Color.GREEN);
                                 tv2.setBackgroundColor(Color.GREEN);
@@ -456,11 +430,11 @@ public class MicActivity extends Activity implements SensorEventListener {
                                 tv.setBackgroundColor(Color.RED);
                                 tv2.setBackgroundColor(Color.RED);
                             }
-                            v.vibrate(500);
+                            v.vibrate(200);
                             tilted = false;
                             threshold = 0;
                             fixY = y;
-                            if(++trial == TRIALS){
+                            if(++trial == TRIALS && !test){
                                 this.finish();
                             }
                         }

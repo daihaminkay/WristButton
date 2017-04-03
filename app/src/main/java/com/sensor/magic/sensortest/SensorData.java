@@ -4,7 +4,7 @@ package com.sensor.magic.sensortest;
  * Created by alexanderdubrovin on 25/10/2016.
  */
 
-public class AccelData {
+public class SensorData {
     private final boolean divider;
     private long timestamp;
     private double x;
@@ -12,11 +12,11 @@ public class AccelData {
     private double z;
     private double a;
 
-    public AccelData() {
+    public SensorData() {
         divider = true;
     }
 
-    public AccelData(long timestamp, double x, double y, double z) {
+    public SensorData(long timestamp, double x, double y, double z) {
         this.timestamp = timestamp;
         this.x = x;
         this.y = y;

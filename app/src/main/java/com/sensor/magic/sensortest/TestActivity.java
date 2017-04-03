@@ -38,7 +38,7 @@ public class TestActivity extends WearableActivity implements SensorEventListene
     int count = 0;
     private SensorManager mSensorManager;
     private Sensor mLight;
-    private ArrayList<AccelData> sensorData = new ArrayList<>();
+    private ArrayList<SensorData> sensorData = new ArrayList<>();
     private View mChart;
     private TextView info;
     private LinearLayout layout;
@@ -87,7 +87,7 @@ public class TestActivity extends WearableActivity implements SensorEventListene
         float y = event.values[1];
         float z = event.values[2];
         long timestamp = System.currentTimeMillis();
-        final AccelData dat = new AccelData(timestamp, x, y, z);
+        final SensorData dat = new SensorData(timestamp, x, y, z);
         sensorData.add(dat);
         if (sensorData.size() > 1) {
             double prevX = sensorData.get(sensorData.size() - 2).getX();
@@ -137,7 +137,7 @@ public class TestActivity extends WearableActivity implements SensorEventListene
             XYSeries zSeries = new XYSeries("Z");
 //            XYSeries aSeries = new XYSeries("A");
 
-            for (AccelData data : sensorData) {
+            for (SensorData data : sensorData) {
                 xSeries.add(data.getTimestamp() - t, data.getX());
                 ySeries.add(data.getTimestamp() - t, data.getY());
                 zSeries.add(data.getTimestamp() - t, data.getZ());

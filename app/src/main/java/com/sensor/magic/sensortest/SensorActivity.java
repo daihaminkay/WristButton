@@ -16,33 +16,9 @@ public class SensorActivity extends WearableActivity {
         setContentView(R.layout.activity_sensor);
     }
 
-    public void startTraining(View view) {
-        Intent intent = new Intent(this, TrainActivity.class);
-        startActivity(intent);
-    }
-
-    public void viewTraining(View view) {
-        Intent intent = new Intent(this, TrainLogActivity.class);
-        startActivity(intent);
-    }
-
-    public void viewRawTraining(View view) {
-        Intent intent = new Intent(this, TrainRawLogActivity.class);
-        startActivity(intent);
-    }
-
-    public void startTesting(View view) {
-        Intent intent = new Intent(this, TestActivity.class);
-        startActivity(intent);
-    }
-
     public void startKnockGame(View view) {
-        Intent intent = new Intent(this, KnockActivity.class);
-        startActivity(intent);
-    }
-
-    public void startKnockTraining(View view) {
-        Intent intent = new Intent(this, KnockLearnActivity.class);
+        Intent intent = new Intent(this, RunModeActivity.class);
+        intent.putExtra("ACTION", "KNOCK");
         startActivity(intent);
     }
 

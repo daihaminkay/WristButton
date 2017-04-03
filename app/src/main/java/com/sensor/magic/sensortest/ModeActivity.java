@@ -29,18 +29,22 @@ public class ModeActivity extends WearableActivity {
     }
 
     public void checkRaise(View view) {
-        Intent intent = new Intent(this, AmbidexActivity.class);
+        Intent intent = new Intent(this, RunModeActivity.class);
+        intent.putExtra("MODE", "RAISE");
+        intent.putExtra("ACTION", "BUTTON");
         startActivity(intent);
     }
 
     public void checkRotate(View view) {
-        Intent intent = new Intent(this, MicActivity.class);
+        Intent intent = new Intent(this, RunModeActivity.class);
         intent.putExtra("MODE", "ROTATE");
+        intent.putExtra("ACTION", "BUTTON");
         startActivity(intent);
     }
 
     public void checkConventional(View view) {
-        Intent intent = new Intent(this, FakeVolumeActivity.class);
+        Intent intent = new Intent(this, RunModeActivity.class);
+        intent.putExtra("ACTION", "NORM");
         startActivity(intent);
     }
 }
