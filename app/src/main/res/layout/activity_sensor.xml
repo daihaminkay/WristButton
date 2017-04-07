@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.sensor.magic.sensortest.SensorActivity"
+    tools:context="com.sensor.magic.sensortest.MainActivity"
     tools:deviceIds="wear"
     >
 

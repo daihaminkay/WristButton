@@ -7,7 +7,7 @@ import android.support.wearable.activity.WearableActivity;
 import android.view.View;
 
 
-public class SensorActivity extends WearableActivity {
+public class MainActivity extends WearableActivity {
 
 
     @Override
